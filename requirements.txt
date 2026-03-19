@@ -1,0 +1,10 @@
+streamlit
+scikit-learn
+nltk
+pypdf
+plotly
+pandas
+numpy
+networkx
+matplotlib
+sentence-transformers
