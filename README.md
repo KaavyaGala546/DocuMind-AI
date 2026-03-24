@@ -1,109 +1,111 @@
-# NLP Research Analyzer
+# 🚀 DocuMind-AI
 
-An end-to-end Natural Language Processing (NLP) system for analyzing, comparing, and extracting insights from research documents using both lexical (TF-IDF) and semantic (Sentence-BERT) representations.
+**DocuMind-AI** is an interactive NLP-powered research document analyzer that helps you explore, compare, and extract insights from text documents using both classical and modern NLP techniques.
 
----
-
-## Overview
-
-The NLP Research Analyzer is designed to process and analyze multiple research documents through a unified pipeline. It integrates classical NLP techniques with modern embedding-based approaches to enable similarity analysis, clustering, topic modeling, and summarization.
-
-The system emphasizes comparative evaluation between lexical and contextual representations to demonstrate the effectiveness of modern NLP methods.
+It allows users to analyze document similarity, cluster related papers, uncover hidden topics, and generate summaries — all through an intuitive Streamlit interface.
 
 ---
 
-## Key Features
+## 🌐 Live Demo
 
-* Document similarity analysis using TF-IDF and Sentence-BERT
-* Clustering of documents with dimensionality reduction (PCA / TruncatedSVD)
-* Topic modeling using Latent Dirichlet Allocation (LDA)
-* Extractive text summarization
-* Interactive visualizations for similarity and clustering
-* Streamlit-based interface for real-time analysis
+👉 https://documindai.streamlit.app
 
 ---
 
-## Technical Stack
+## ✨ Features
+
+- 📄 Upload and analyze `.txt` or `.pdf` documents  
+- 🔍 Document similarity analysis  
+- 🧠 Dual vectorization:
+  - TF-IDF (Classical NLP)
+  - SBERT (Semantic Embeddings)  
+- 📊 Clustering of related documents (K-Means)  
+- 🧩 Topic modeling for theme discovery  
+- ✂️ Extractive text summarization  
+- 📈 Interactive visualizations (heatmaps, clusters)  
+- 🎛️ Clean and modern Streamlit UI  
+
+---
+
+## 🧠 Why DocuMind-AI?
+
+Traditional NLP methods like TF-IDF focus on keyword matching, while modern approaches like SBERT capture contextual meaning.
+
+This project lets you **compare both approaches side-by-side**, making it a powerful tool for:
+- research analysis  
+- document comparison  
+- NLP learning and experimentation  
+
+---
+
+## 🛠️ Tech Stack
 
 **Language**
+- Python  
 
-* Python
-
-**Core Libraries**
-
-* Pandas, NumPy
-* Scikit-learn
-* Matplotlib, Seaborn
-
-**NLP & Embeddings**
-
-* NLTK
-* Sentence-Transformers (SBERT)
-
-**Visualization**
-
-* Plotly
-
-**Application Layer**
-
-* Streamlit
+**Libraries & Frameworks**
+- Streamlit  
+- Pandas  
+- NumPy  
+- Scikit-learn  
+- NLTK  
+- Sentence-Transformers (SBERT)  
+- Plotly  
 
 ---
 
-## System Architecture
+## ⚙️ How It Works
 
-The system follows a modular pipeline:
+### 1. Preprocessing
+- Text cleaning  
+- Tokenization  
+- Stopword removal  
+- Lemmatization  
 
-1. **Preprocessing Layer**
+### 2. Vectorization
+- TF-IDF representation  
+- SBERT embeddings  
 
-   * Text cleaning, tokenization, stopword removal, and lemmatization
+### 3. Analysis
+- Document similarity  
+- K-Means clustering  
+- Topic modeling  
+- Extractive summarization  
 
-2. **Representation Layer**
-
-   * TF-IDF (sparse lexical representation)
-   * Sentence-BERT (dense semantic embeddings)
-
-3. **Analysis Layer**
-
-   * Similarity computation
-   * K-Means clustering
-   * Topic modeling (LDA)
-   * Extractive summarization
-
-4. **Dimensionality Reduction**
-
-   * PCA / TruncatedSVD for visualization
-
-5. **Visualization Layer**
-
-   * Cluster plots
-   * Similarity matrices
-   * Interactive dashboards
+### 4. Visualization
+- Similarity heatmaps  
+- Cluster plots  
+- Interactive dashboard  
 
 ---
 
-## Evaluation
+## 📁 Project Structure
 
-The system evaluates the effectiveness of lexical versus semantic representations for document clustering.
-
-* Semantic embeddings (SBERT) demonstrated improved clustering coherence
-* Higher silhouette scores observed for semantic representations
-* Results highlight the limitations of purely lexical approaches in capturing contextual meaning
+```
+DocuMind-AI/
+├── app.py
+├── preprocessing.py
+├── modeling.py
+├── utils.py
+├── create_corpus.py
+├── requirements.txt
+├── research_documents/
+└── .github/workflows/
+```
 
 ---
 
-## Usage
-
-### Installation
+## ⚡ Installation
 
 ```bash
-git clone https://github.com/KaavyaGala546/NLP_Research_Analyser.git
-cd NLP_Research_Analyser
-
+git clone https://github.com/KaavyaGala546/DocuMind-AI.git
+cd DocuMind-AI
 pip install -r requirements.txt
 ```
 
-### Run Application
+---
+
+## ▶️ Run Locally
 
 ```bash
 streamlit run app.py
@@ -111,46 +113,54 @@ streamlit run app.py
 
 ---
 
-## Project Structure
+## 🧪 Usage
 
-```
-NLP_Research_Analyser/
-│
-├── app.py                # Streamlit application entry point
-├── preprocessing.py     # Text preprocessing pipeline
-├── modeling.py          # Vectorization, clustering, and topic modeling
-├── utils.py             # Utility functions
-├── create_corpus.py     # Dataset preparation
-├── requirements.txt     # Dependencies
-├── report.tex           # Research documentation (LaTeX)
-└── workflows/           # Processing workflows
-```
+1. Open the app locally or via the live demo  
+2. Upload your own documents OR use sample data  
+3. Select vectorization mode:
+   - TF-IDF  
+   - SBERT  
+4. Explore:
+   - similarity  
+   - clustering  
+   - topics  
+   - summaries  
 
 ---
 
-## Limitations
+## 📊 Key Insights
 
-* Designed for structured research-style documents
-* Unsupervised evaluation metrics depend on dataset characteristics
-* Performance may vary with corpus size and diversity
-
----
-
-## Future Work
-
-* Integration of transformer-based abstractive summarization
-* Optimization for large-scale datasets
-* Deployment as a scalable web application
-* Enhanced user interface and interaction design
+- SBERT captures **contextual similarity** better than TF-IDF  
+- TF-IDF performs well for **keyword-based matching**  
+- Clustering improves significantly with semantic embeddings  
+- Visualization helps understand document relationships clearly  
 
 ---
 
-## Author
+## ⚠️ Limitations
 
-Kaavya Gala
+- Works best with structured or research-style text  
+- Extractive summaries may miss deeper context  
+- Performance depends on dataset size  
 
 ---
 
-## Notes
+## 🔮 Future Improvements
 
-This project was developed to explore practical NLP system design and evaluate the performance differences between classical vectorization techniques and modern embedding-based approaches.
+- Abstractive summarization (transformers)  
+- Better PDF parsing  
+- Larger dataset support  
+- Exportable reports  
+- Enhanced UI/UX  
+
+---
+
+## 👩‍💻 Author
+
+**Kaavya Gala**
+
+---
+
+## ⭐ If you like this project
+
+Give it a star ⭐ and feel free to fork or contribute!
