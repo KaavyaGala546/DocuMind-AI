@@ -8,7 +8,7 @@ It allows users to analyze document similarity, cluster related papers, uncover 
 
 ## 🌐 Live Demo
 
-👉 https://docu-mind-ai-kaavya.streamlit.app/
+👉 https://docu-mind-ai-kaavya.streamlit.app
 
 ---
 
