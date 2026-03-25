@@ -809,23 +809,15 @@ show_document_modal(doc_name, raw_docs[idx], cleaned_doc, cluster_keywords[clust
                 st.markdown("</div>", unsafe_allow_html=True)
 
 else:
-    # --- Ultra-Premium Empty State ---
     st.markdown(
         """
-        <div style='text-align:center; padding: 8rem 2rem; border: 1px dashed var(--border-medium); border-radius: 24px; background: rgba(255,255,255,0.01); backdrop-filter: blur(10px);'>
-            <div style='font-size: 5rem; margin-bottom: 2rem; filter: saturate(0.5) opacity(0.8);'>🧪</div>
-            <h1 style='font-weight: 800; margin-bottom: 0.75rem; font-size: 2.5rem; color: #FFF;'>Intelligence Awaits</h1>
-            <p style='color: var(--text-secondary); max-width: 550px; margin: 0 auto 3rem auto; font-size: 1.15rem; font-weight: 400; line-height: 1.7;'>
-                DocuMind AI is ready to distill your research. Select a corpus from the sidebar or upload your own neural data to begin the synthesis.
+        <div class='dm-empty'>
+            <div style='font-size: 4rem; margin-bottom: 1rem;'>🧠</div>
+            <h3>DocuMind AI is ready</h3>
+            <p style='max-width: 620px; margin: 0 auto; line-height: 1.8; color: #cbd5e1;'>
+                Select a sample corpus from the sidebar or upload your own PDF or TXT files
+                to begin semantic analysis, clustering, topic discovery, and summarization.
             </p>
-            <div style='display: flex; justify-content: center; gap: 1.5rem;'>
-                <div style='background: var(--accent-soft); border: 1px solid rgba(147, 51, 234, 0.3); color: var(--accent); padding: 12px 24px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;'>
-                    1. Select Data
-                </div>
-                <div style='background: rgba(255,255,255,0.03); border: 1px solid var(--border-medium); color: var(--text-secondary); padding: 12px 24px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;'>
-                    2. Scale Insights
-                </div>
-            </div>
         </div>
         """,
         unsafe_allow_html=True
