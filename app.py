@@ -599,29 +599,30 @@ if raw_docs:
         suggested_k, _ = calculate_optimal_clusters(X)
 
     # -- Modern KPI Cards --
-    st.markdown(
-        f"""
-        <div class='kpi-container'>
-            <div class='kpi-card'>
-                <div class='kpi-value'>{len(raw_docs)}</div>
-                <div class='kpi-label'>Intelligence Pool</div>
-            </div>
-            <div class='kpi-card'>
-                <div class='kpi-value'>{feature_count}</div>
-                <div class='kpi-label'>{feature_label}</div>
-            </div>
-            <div class='kpi-card'>
-                <div class='kpi-value'>{suggested_k}</div>
-                <div class='kpi-label'>Suggested Clusters</div>
-            </div>
-            <div class='kpi-card'>
-                <div class='kpi-value'>{engine_label}</div>
-                <div class='kpi-label'>Neural Engine</div>
-            </div>
+    # -- Modern KPI Cards --
+st.markdown(
+    f"""
+    <div class='kpi-container'>
+        <div class='kpi-card'>
+            <div class='kpi-value'>{len(raw_docs)}</div>
+            <div class='kpi-label'>Documents Loaded</div>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+        <div class='kpi-card'>
+            <div class='kpi-value'>{feature_count}</div>
+            <div class='kpi-label'>{feature_label}</div>
+        </div>
+        <div class='kpi-card'>
+            <div class='kpi-value'>{suggested_k}</div>
+            <div class='kpi-label'>Suggested Clusters</div>
+        </div>
+        <div class='kpi-card'>
+            <div class='kpi-value'>{engine_label}</div>
+            <div class='kpi-label'>Active Engine</div>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
     # ---------------------------------------------------------------------------
     # Information Architecture Restructuring
