@@ -598,41 +598,40 @@ if raw_docs:
     with st.spinner("Analyzing semantic patterns…"):
         suggested_k, _ = calculate_optimal_clusters(X)
 
-    # -- Modern KPI Cards --
-    # -- Modern KPI Cards --
-st.markdown(
-    f"""
-    <div class='kpi-container'>
-        <div class='kpi-card'>
-            <div class='kpi-value'>{len(raw_docs)}</div>
-            <div class='kpi-label'>Documents Loaded</div>
+        # -- Modern KPI Cards --
+    st.markdown(
+        f"""
+        <div class='kpi-container'>
+            <div class='kpi-card'>
+                <div class='kpi-value'>{len(raw_docs)}</div>
+                <div class='kpi-label'>Documents Loaded</div>
+            </div>
+            <div class='kpi-card'>
+                <div class='kpi-value'>{feature_count}</div>
+                <div class='kpi-label'>{feature_label}</div>
+            </div>
+            <div class='kpi-card'>
+                <div class='kpi-value'>{suggested_k}</div>
+                <div class='kpi-label'>Suggested Clusters</div>
+            </div>
+            <div class='kpi-card'>
+                <div class='kpi-value'>{engine_label}</div>
+                <div class='kpi-label'>Active Engine</div>
+            </div>
         </div>
-        <div class='kpi-card'>
-            <div class='kpi-value'>{feature_count}</div>
-            <div class='kpi-label'>{feature_label}</div>
-        </div>
-        <div class='kpi-card'>
-            <div class='kpi-value'>{suggested_k}</div>
-            <div class='kpi-label'>Suggested Clusters</div>
-        </div>
-        <div class='kpi-card'>
-            <div class='kpi-value'>{engine_label}</div>
-            <div class='kpi-label'>Active Engine</div>
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+        """,
+        unsafe_allow_html=True
+    )
 
     # ---------------------------------------------------------------------------
     # Information Architecture Restructuring
     # ---------------------------------------------------------------------------
-    
+
     st.markdown("<div style='margin-bottom: 1rem;'></div>", unsafe_allow_html=True)
 
-tab_clusters, tab_topics, tab_similarity, tab_explorer = st.tabs([
-    "Clusters", "Topics", "Similarity", "Document Explorer"
-])
+    tab_clusters, tab_topics, tab_similarity, tab_explorer = st.tabs([
+        "Clusters", "Topics", "Similarity", "Document Explorer"
+    ])
 
     # ---------------------------------------------------------------
     # CLUSTERS TAB
@@ -673,7 +672,6 @@ tab_clusters, tab_topics, tab_similarity, tab_explorer = st.tabs([
                 else:
                     st.info("K=1 — All documents in a single cluster.")
 
-                # -- Cluster-level features & Synthesis --
                 cluster_texts = {i: "" for i in range(k)}
                 for label, text in zip(labels, raw_docs):
                     cluster_texts[label] += text + " "
@@ -681,7 +679,10 @@ tab_clusters, tab_topics, tab_similarity, tab_explorer = st.tabs([
                 cluster_list = [cluster_texts[i] for i in range(k)]
 
                 with st.spinner("Extracting semantic markers…"):
-                    processed_clusters = [execute_preprocessing_pipeline(c, preserve_numeric=preserve_numbers) for c in cluster_list]
+                    processed_clusters = [
+                        execute_preprocessing_pipeline(c, preserve_numeric=preserve_numbers)
+                        for c in cluster_list
+                    ]
                     cluster_X, cluster_vectorizer = extract_tfidf_features(processed_clusters)
 
                     cluster_vocab_size = len(cluster_vectorizer.get_feature_names_out())
@@ -691,44 +692,69 @@ tab_clusters, tab_topics, tab_similarity, tab_explorer = st.tabs([
                         cluster_vectorizer, cluster_X, top_n=dynamic_top_n
                     )
 
-                    # Cluster Synthesis
                     cluster_synthesis = {}
                     for cid in range(k):
-                        # Join all text for the cluster and get top sentences
                         full_cluster_text = cluster_texts[cid]
-                        # Clean it up
-                        readable_cluster = prepare_text_for_summary(full_cluster_text, preserve_numeric=preserve_numbers)
-                        # Extract top 3 sentences for the WHOLE cluster
-                        synthesis_sents = generate_extractive_summary(readable_cluster, cluster_vectorizer, top_n=3)
+                        readable_cluster = prepare_text_for_summary(
+                            full_cluster_text,
+                            preserve_numeric=preserve_numbers
+                        )
+                        synthesis_sents = generate_extractive_summary(
+                            readable_cluster,
+                            cluster_vectorizer,
+                            top_n=3
+                        )
                         cluster_synthesis[cid] = " ".join(synthesis_sents)
 
-                # -- Display Cluster Cards --
                 for cluster_id in range(k):
-                    st.markdown(f"<div class='content-card'>", unsafe_allow_html=True)
-                    st.markdown(f"<div class='cluster-badge'>Cluster {cluster_id}</div>", unsafe_allow_html=True)
+                    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+                    st.markdown(
+                        f"<div class='cluster-badge'>Cluster {cluster_id}</div>",
+                        unsafe_allow_html=True
+                    )
 
-                    # Synthesis
-                    st.markdown(f"<p style='font-size: 1.05rem; line-height: 1.6; color: #E2E8F0; margin-bottom: 1.5rem;'>{cluster_synthesis[cluster_id]}</p>", unsafe_allow_html=True)
+                    st.markdown(
+                        f"<p style='font-size: 1.05rem; line-height: 1.6; color: #E2E8F0; margin-bottom: 1.5rem;'>{cluster_synthesis[cluster_id]}</p>",
+                        unsafe_allow_html=True
+                    )
 
-                    # Keywords
-                    chips_html = "".join(f"<div class='chip'>{kw}</div>" for kw in cluster_keywords[cluster_id])
+                    chips_html = "".join(
+                        f"<div class='chip'>{kw}</div>" for kw in cluster_keywords[cluster_id]
+                    )
                     st.markdown(chips_html, unsafe_allow_html=True)
 
-                    # Document List toggle
                     cluster_docs_indices = [i for i, lbl in enumerate(labels) if lbl == cluster_id]
                     with st.expander(f"Inspect {len(cluster_docs_indices)} Neural Sources"):
                         for idx in cluster_docs_indices:
                             doc_name = filenames[idx]
-                            if st.button(f"Analyze: {doc_name}", key=f"btn_cl_doc_{cluster_id}_{idx}", use_container_width=True):
-                                # Just a quick way to find the pre-computed summary if needed, or just run a quick one
-                                sents = generate_extractive_summary(prepare_text_for_summary(raw_docs[idx], preserve_numeric=preserve_numbers), cluster_vectorizer, top_n=3)
-                                cleaned_doc = prepare_text_for_summary(raw_docs[idx], preserve_numeric=preserve_numbers)
-show_document_modal(doc_name, raw_docs[idx], cleaned_doc, cluster_keywords[cluster_id], sents)
+                            if st.button(
+                                f"Analyze: {doc_name}",
+                                key=f"btn_cl_doc_{cluster_id}_{idx}",
+                                use_container_width=True
+                            ):
+                                sents = generate_extractive_summary(
+                                    prepare_text_for_summary(
+                                        raw_docs[idx],
+                                        preserve_numeric=preserve_numbers
+                                    ),
+                                    cluster_vectorizer,
+                                    top_n=3
+                                )
+                                cleaned_doc = prepare_text_for_summary(
+                                    raw_docs[idx],
+                                    preserve_numeric=preserve_numbers
+                                )
+                                show_document_modal(
+                                    doc_name,
+                                    raw_docs[idx],
+                                    cleaned_doc,
+                                    cluster_keywords[cluster_id],
+                                    sents
+                                )
 
                     st.markdown("</div>", unsafe_allow_html=True)
         else:
             st.warning("Upload at least 2 documents to view clustering.")
-
     # ---------------------------------------------------------------
     # TOPICS TAB (LDA)
     # ---------------------------------------------------------------
