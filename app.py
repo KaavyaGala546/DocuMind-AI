@@ -397,8 +397,8 @@ CUSTOM_CSS = """
 PLOTLY_LAYOUT = dict(
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
-    font=dict(family='Outfit', color='#8B949E'),
-    title_font=dict(size=20, color='#E6EDF3', family='Outfit'),
+    font=dict(family='Inter', color='#8B949E'),
+    title_font=dict(size=20, color='#E6EDF3', family='Inter'),
     margin=dict(t=60, b=40, l=40, r=40),
     xaxis=dict(gridcolor='rgba(255,255,255,0.05)', zeroline=False),
     yaxis=dict(gridcolor='rgba(255,255,255,0.05)', zeroline=False),
