@@ -28,6 +28,8 @@ https://docu-mind-ai-kaavya.streamlit.app/
 
 ## Overview
 
+Unlike typical document chat systems, this project focuses on visual analysis — clustering, similarity mapping, and thematic discovery.
+
 DocuMind AI is an interactive document intelligence system that enables users to explore, compare, and understand document collections efficiently.
 
 Instead of treating NLP as isolated experiments, this project integrates multiple techniques into a single usable system.
