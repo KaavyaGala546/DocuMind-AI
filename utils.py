@@ -141,11 +141,11 @@ def render_silhouette_chart(scores_per_k):
         x="Clusters (k)",
         y="Silhouette Score",
         markers=True,
-        title="Cluster Quality — Silhouette Score Analysis"
+        title="Cluster Quality Profile"
     )
     fig.update_traces(
-        line=dict(color='#a8edea', width=3),
-        marker=dict(size=10, color='#667eea', line=dict(width=2, color='#a8edea'))
+        line=dict(color='#8B5CF6', width=4),
+        marker=dict(size=12, color='#FFF', line=dict(width=2, color='#8B5CF6'))
     )
     
     score_min = df["Silhouette Score"].min()
@@ -153,6 +153,7 @@ def render_silhouette_chart(scores_per_k):
     padding = 0.05
     fig.update_yaxes(range=[score_min - padding, score_max + padding])
     fig.update_layout(xaxis=dict(dtick=1))
+
     
     return fig
 
@@ -174,8 +175,9 @@ def render_similarity_heatmap(sim_matrix, filenames):
         sim_df,
         text_auto=".2f",
         aspect="auto",
-        color_continuous_scale="Viridis"
+        color_continuous_scale="Purp"  # Matching the violet accent
     )
+
     
     # Full filename grid for hover tooltips
     hover_grid = [

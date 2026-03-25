@@ -20,195 +20,192 @@ import re
 
 CUSTOM_CSS = """
 <style>
-/* ---- Import Google Font ---- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* ---- Import Google Fonts ---- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap');
 
-/* ---- Global (scoped to avoid breaking Streamlit icon fonts) ---- */
-html, body, p, h1, h2, h3, h4, h5, h6, span, div, li, td, th, label, input, textarea, button {
-    font-family: 'Inter', sans-serif;
-}
-/* Restore Material Symbols for Streamlit icon buttons */
-[data-testid="collapsedControl"] * ,
-.material-symbols-rounded {
-    font-family: 'Material Symbols Rounded' !important;
+/* ---- Global Styles & Variables ---- */
+:root {
+    --bg-dark: #0D1117;
+    --card-bg: #161B22;
+    --card-border: rgba(240, 246, 252, 0.1);
+    --accent: #8B5CF6; /* Violet */
+    --accent-glow: rgba(139, 92, 246, 0.15);
+    --text-primary: #E6EDF3;
+    --text-secondary: #8B949E;
+    --text-muted: #484F58;
+    --success: #238636;
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-heading: 'Outfit', sans-serif;
 }
 
-/* ---- Hero Banner ---- */
-.hero-banner {
-    background: linear-gradient(135deg, #0f2027 0%, #203a43 40%, #2c5364 100%);
-    padding: 2.5rem 2rem;
+html, body, [data-testid="stAppViewContainer"] {
+    background-color: var(--bg-dark) !important;
+    font-family: var(--font-main);
+}
+
+h1, h2, h3, h4, .stHeader {
+    font-family: var(--font-heading) !important;
+    color: var(--text-primary) !important;
+}
+
+/* ---- Component-Specific Styles ---- */
+
+/* Hero Section */
+.hero-section {
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #FFF 0%, #8B5CF6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -1px;
+}
+.hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Modern KPI Cards */
+.kpi-container {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+.kpi-card {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
     border-radius: 16px;
-    margin-bottom: 1.5rem;
-    border: 1px solid rgba(255,255,255,0.06);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    padding: 1.5rem;
+    text-align: left;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
-.hero-banner h1 {
-    margin: 0;
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at top left, var(--accent-glow), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.kpi-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.kpi-card:hover::before {
+    opacity: 1;
+}
+.kpi-value {
     font-size: 2.2rem;
     font-weight: 700;
-    background: linear-gradient(90deg, #e0e0e0, #a8edea);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #FFF;
+    margin-bottom: 0.25rem;
+    font-family: var(--font-heading);
 }
-.hero-banner p {
-    margin: 0.5rem 0 0 0;
-    color: #94a3b8;
-    font-size: 1rem;
-    font-weight: 300;
-}
-
-/* ---- Stat Cards ---- */
-.stat-card {
-    background: linear-gradient(145deg, #1a1f2e, #151923);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 14px;
-    padding: 1.4rem 1.2rem;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(0,0,0,0.4);
-}
-.stat-card .stat-value {
-    font-size: 2rem;
-    font-weight: 700;
-    background: linear-gradient(90deg, #a8edea, #fed6e3);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-.stat-card .stat-label {
-    font-size: 0.82rem;
-    color: #64748b;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    margin-top: 0.35rem;
-}
-
-/* ---- Keyword Pill ---- */
-.keyword-pill {
-    display: inline-block;
-    background: rgba(168, 237, 234, 0.08);
-    border: 1px solid rgba(168, 237, 234, 0.25);
-    color: #a8edea;
-    padding: 6px 14px;
-    border-radius: 20px;
+.kpi-label {
     font-size: 0.85rem;
-    font-weight: 500;
-    margin: 4px 4px 4px 0;
-    transition: background 0.2s;
-}
-.keyword-pill:hover {
-    background: rgba(168, 237, 234, 0.15);
-}
-
-/* ---- Cluster Card ---- */
-.cluster-card {
-    background: linear-gradient(145deg, #1e2433, #171c28);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 14px;
-    padding: 1.6rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-}
-.cluster-card h3 {
-    margin-top: 0;
-    font-weight: 600;
-    color: #e2e8f0;
-}
-.cluster-label {
-    display: inline-block;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    padding: 4px 14px;
-    border-radius: 20px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.8px;
+    color: var(--text-secondary);
     text-transform: uppercase;
-    margin-bottom: 0.8rem;
+    letter-spacing: 1px;
+    font-weight: 600;
 }
 
-/* ---- Summary Item ---- */
-.summary-item {
-    background: rgba(255,255,255,0.03);
-    border-left: 3px solid #667eea;
-    padding: 0.6rem 1rem;
-    margin: 0.5rem 0;
-    border-radius: 0 8px 8px 0;
-    font-size: 0.92rem;
-    line-height: 1.6;
-    color: #cbd5e1;
+/* Cluster & Content Cards */
+.content-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.cluster-badge {
+    display: inline-block;
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--accent);
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(139, 92, 246, 0.2);
 }
 
-/* ---- Section Divider ---- */
-.section-divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-    margin: 1.5rem 0;
+/* Pills & Chips */
+.chip {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    margin-right: 6px;
+    margin-bottom: 6px;
+    transition: all 0.2s;
+}
+.chip:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #FFF;
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
-/* ---- Tab Styling ---- */
+/* Tabs Redesign */
 .stTabs [data-baseweb="tab-list"] {
-    gap: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 6px;
+    border-radius: 12px;
+    gap: 4px;
 }
 .stTabs [data-baseweb="tab"] {
-    border-radius: 8px 8px 0 0;
-    padding: 10px 24px;
-    font-weight: 500;
-}
-
-/* ---- Expander + Info boxes ---- */
-div[data-testid="stExpander"] {
-    border: 1px solid rgba(255,255,255,0.06) !important;
-    border-radius: 10px !important;
-    background: rgba(255,255,255,0.015) !important;
-}
-
-/* ---- Modal Document Viewer ---- */
-.doc-viewer {
-    max-height: 500px;
-    overflow-y: auto;
-    padding: 1.2rem;
-    border-radius: 10px;
-    background: #0d1117;
-    border: 1px solid rgba(255,255,255,0.06);
-    line-height: 1.7;
-    font-size: 15px;
-    white-space: pre-wrap;
-    color: #c9d1d9;
-}
-
-/* ---- Legend badges ---- */
-.legend-badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 0.82rem;
-    margin-right: 8px;
-}
-.legend-summary { background-color: #2ea043; color: white; }
-.legend-keyword { background-color: #da3633; color: white; }
-
-/* ---- LDA Topic Tag ---- */
-.topic-tag {
-    display: inline-block;
-    background: rgba(80, 200, 120, 0.08);
-    border: 1px solid rgba(80, 200, 120, 0.3);
-    color: #50C878;
-    padding: 6px 14px;
     border-radius: 8px;
-    font-size: 0.88rem;
-    font-weight: 500;
-    line-height: 1.5;
+    padding: 8px 20px;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+.stTabs [aria-selected="true"] {
+    background: var(--accent) !important;
+    color: #FFF !important;
 }
 
-/* ---- Hide default Streamlit padding around metrics ---- */
-div[data-testid="stMetric"] {
-    display: none;
+/* Document Viewer Enhancements */
+.doc-modal-header {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 1rem;
 }
+.highlight-summary { background: rgba(35, 134, 54, 0.25); border-bottom: 2px solid var(--success); }
+.highlight-keyword { color: var(--accent); font-weight: 600; text-decoration: underline; }
+
+/* Sidebar Cleanup */
+[data-testid="stSidebar"] {
+    background-color: #010409 !important;
+}
+.sidebar-section-header {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Hide default streamlit bits */
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+div[data-testid="stMetric"] { display: none; }
 </style>
 """
 
@@ -219,10 +216,13 @@ div[data-testid="stMetric"] {
 PLOTLY_LAYOUT = dict(
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
-    font=dict(family='Inter', color='#94a3b8'),
-    title_font=dict(size=16, color='#e2e8f0'),
-    margin=dict(t=50, b=40, l=50, r=30),
+    font=dict(family='Outfit', color='#8B949E'),
+    title_font=dict(size=20, color='#E6EDF3', family='Outfit'),
+    margin=dict(t=60, b=40, l=40, r=40),
+    xaxis=dict(gridcolor='rgba(255,255,255,0.05)', zeroline=False),
+    yaxis=dict(gridcolor='rgba(255,255,255,0.05)', zeroline=False),
 )
+
 
 # ---------------------------------------------------------------------------
 # Document Viewer Modal
@@ -250,11 +250,13 @@ def _highlight_text(text, keywords, summary_sentences):
 
 @st.dialog("Detailed Analysis Report", width="large")
 def show_document_modal(doc_name, raw_text, cleaned_text, keywords, summary_sentences):
+    st.markdown(f"<div class='doc-modal-header'><h3>{doc_name}</h3></div>", unsafe_allow_html=True)
+    
     st.markdown(
-        f"### {doc_name}\n\n"
-        "<span class='legend-badge legend-summary'>Summary Sentence</span>"
-        "<span class='legend-badge legend-keyword'>Keyword</span>"
-        "<hr style='margin: 12px 0; border-color: rgba(255,255,255,0.06);'>",
+        "<div style='margin-bottom: 1.5rem;'>"
+        "<span class='chip' style='background: rgba(35, 134, 54, 0.1); color: #2ea043; border-color: rgba(35, 134, 54, 0.2);'>Summary Segment</span>"
+        "<span class='chip' style='background: rgba(139, 92, 246, 0.1); color: var(--accent); border-color: rgba(139, 92, 246, 0.2);'>Key Term</span>"
+        "</div>",
         unsafe_allow_html=True
     )
 
@@ -268,37 +270,46 @@ def show_document_modal(doc_name, raw_text, cleaned_text, keywords, summary_sent
         st.markdown(f"<div class='doc-viewer'>{raw_text}</div>", unsafe_allow_html=True)
 
 
+
 # ---------------------------------------------------------------------------
 # Page Config & CSS Injection
 # ---------------------------------------------------------------------------
 
-st.set_page_config(layout="wide", page_title="NLP Research Analyzer")
+st.set_page_config(layout="wide", page_title="DocuMind AI", page_icon="🧠")
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
-# Hero Banner
+# ---------------------------------------------------------------------------
+# Hero Header
+# ---------------------------------------------------------------------------
+
 st.markdown(
     """
-    <div class='hero-banner'>
-        <h1>NLP Research Analyzer</h1>
-        <p>Uncover hidden themes, measure document similarity, and cluster research papers using classical NLP techniques.</p>
+    <div class='hero-section'>
+        <div class='hero-title'>DocuMind AI</div>
+        <div class='hero-subtitle'>
+            Document intelligence for research, analysis, and semantic discovery.
+            Extract hidden themes and measure similarity with precision.
+        </div>
     </div>
     """,
     unsafe_allow_html=True
 )
 
+
 # ---------------------------------------------------------------------------
 # Sidebar
 # ---------------------------------------------------------------------------
 
-st.sidebar.markdown("## Configuration")
-st.sidebar.caption("Fine-tune the analysis pipeline and choose your data source.")
+st.sidebar.markdown("<div class='sidebar-section-header'>Analysis Engine</div>", unsafe_allow_html=True)
 
 vectorization_mode = st.sidebar.radio(
     "Vectorization Mode",
     ["TF-IDF (Classical)", "Semantic Embeddings (SBERT)"],
     index=0,
-    help="TF-IDF uses lexical word frequencies. Semantic Embeddings use a pre-trained encoder to capture meaning."
+    help="TF-IDF uses lexical word frequencies. Semantic Embeddings use a pre-trained encoder to capture meaning.",
+    label_visibility="collapsed"
 )
+
 use_semantic = vectorization_mode == "Semantic Embeddings (SBERT)"
 
 preserve_numbers = st.sidebar.toggle(
@@ -307,8 +318,8 @@ preserve_numbers = st.sidebar.toggle(
     disabled=use_semantic
 )
 
-st.sidebar.markdown("---")
-st.sidebar.markdown("### Data Source")
+st.sidebar.markdown("<div class='sidebar-section-header'>Data Source</div>", unsafe_allow_html=True)
+
 
 CORPUS_OPTIONS = {
     "Upload My Own Files": None,
@@ -396,26 +407,27 @@ if raw_docs:
         feature_label = "Vocabulary Terms"
         engine_label = "K-Means++"
 
-    # -- Stat Cards --
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.markdown(
-            f"<div class='stat-card'><div class='stat-value'>{len(raw_docs)}</div>"
-            "<div class='stat-label'>Documents Loaded</div></div>",
-            unsafe_allow_html=True
-        )
-    with c2:
-        st.markdown(
-            f"<div class='stat-card'><div class='stat-value'>{feature_count}</div>"
-            f"<div class='stat-label'>{feature_label}</div></div>",
-            unsafe_allow_html=True
-        )
-    with c3:
-        st.markdown(
-            f"<div class='stat-card'><div class='stat-value'>{engine_label}</div>"
-            "<div class='stat-label'>Clustering Engine</div></div>",
-            unsafe_allow_html=True
-        )
+    # -- Modern KPI Cards --
+    st.markdown(
+        f"""
+        <div class='kpi-container'>
+            <div class='kpi-card'>
+                <div class='kpi-value'>{len(raw_docs)}</div>
+                <div class='kpi-label'>Documents Loaded</div>
+            </div>
+            <div class='kpi-card'>
+                <div class='kpi-value'>{feature_count}</div>
+                <div class='kpi-label'>{feature_label}</div>
+            </div>
+            <div class='kpi-card'>
+                <div class='kpi-value'>{engine_label}</div>
+                <div class='kpi-label'>Analysis Engine</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 
     st.markdown("<div class='section-divider'></div>", unsafe_allow_html=True)
 
@@ -455,6 +467,7 @@ if raw_docs:
             )
 
         if len(raw_docs) >= 2:
+            st.markdown("<div class='content-card'>", unsafe_allow_html=True)
             n_topics = st.slider("Number of Topics", min_value=2, max_value=min(6, len(raw_docs)), value=3, key="lda_slider")
 
             with st.spinner("Fitting LDA model…"):
@@ -464,11 +477,16 @@ if raw_docs:
             for topic_idx, topic in enumerate(lda_model.components_):
                 top_features_ind = topic.argsort()[:-10 - 1:-1]
                 top_features = [feature_names[i] for i in top_features_ind]
-                topic_html = f"<span class='topic-tag'>{', '.join(top_features)}</span>"
-                st.markdown(f"**Theme {topic_idx + 1}:** &nbsp; {topic_html}", unsafe_allow_html=True)
-                st.markdown("")
+                
+                st.markdown(f"<div style='margin-bottom: 1.25rem;'>", unsafe_allow_html=True)
+                st.markdown(f"<div class='cluster-badge'>Theme {topic_idx + 1}</div>", unsafe_allow_html=True)
+                chips_html = "".join(f"<div class='chip'>{kw}</div>" for kw in top_features)
+                st.markdown(chips_html, unsafe_allow_html=True)
+                st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
         else:
             st.warning("Upload at least 2 documents for topic modeling.")
+
 
     # ---------------------------------------------------------------
     # TAB 1 — Clustering
@@ -516,12 +534,16 @@ if raw_docs:
 
                     fig = px.scatter(
                         cluster_df, x='PCA1', y='PCA2', color='Cluster',
-                        hover_name='Document', title="Semantic Clustering (2D PCA)",
-                        color_discrete_sequence=px.colors.qualitative.Set2
+                        hover_name='Document', title="Semantic Distribution (Latent Space)",
+                        color_discrete_sequence=px.colors.qualitative.Prism
                     )
-                    fig.update_traces(marker=dict(size=18, opacity=0.85, line=dict(width=1.5, color='rgba(255,255,255,0.2)')))
+                    fig.update_traces(
+                        marker=dict(size=14, opacity=0.9, line=dict(width=1.5, color='rgba(255,255,255,0.2)')),
+                        selector=dict(mode='markers')
+                    )
                     fig.update_layout(**PLOTLY_LAYOUT)
-                    st.plotly_chart(fig, width='stretch')
+                    st.plotly_chart(fig, use_container_width=True)
+
                 else:
                     st.info("K=1 — All documents in a single cluster. PCA scatter disabled.")
 
@@ -558,17 +580,17 @@ if raw_docs:
                 st.subheader("Cluster Insights")
 
                 for cluster_id in range(k):
-                    st.markdown(f"<div class='cluster-card'>", unsafe_allow_html=True)
-                    st.markdown(f"<span class='cluster-label'>Cluster {cluster_id}</span>", unsafe_allow_html=True)
+                    st.markdown(f"<div class='content-card'>", unsafe_allow_html=True)
+                    st.markdown(f"<div class='cluster-badge'>Cluster {cluster_id}</div>", unsafe_allow_html=True)
 
-                    # Keywords as pills
-                    pills_html = "".join(
-                        f"<span class='keyword-pill'>{kw}</span>" for kw in cluster_keywords[cluster_id]
+                    # Keywords as chips
+                    chips_html = "".join(
+                        f"<div class='chip'>{kw}</div>" for kw in cluster_keywords[cluster_id]
                     )
-                    st.markdown(f"**Keywords**<br>{pills_html}", unsafe_allow_html=True)
+                    st.markdown(f"**Top keywords**<br>{chips_html}", unsafe_allow_html=True)
 
-                    # Per-document summary — uniform styling
-                    st.markdown("**Summary**", unsafe_allow_html=True)
+                    # Per-document summary
+                    st.markdown("<div style='margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: 600;'>Document Syntheses</div>", unsafe_allow_html=True)
                     for doc_name, sents in cluster_doc_summaries[cluster_id]:
                         if sents:
                             combined = " ".join(sents)
@@ -577,20 +599,29 @@ if raw_docs:
                                 unsafe_allow_html=True
                             )
 
-                    # Document buttons
-                    st.markdown("**Documents**")
+                    # Document inspection button
+                    st.markdown("<div style='margin-top: 1.5rem;'></div>", unsafe_allow_html=True)
                     cluster_docs_indices = [i for i, lbl in enumerate(labels) if lbl == cluster_id]
-                    for idx in cluster_docs_indices:
-                        doc_name = filenames[idx]
-                        if st.button(doc_name, key=f"btn_cluster_{cluster_id}_{idx}", use_container_width=True):
-                            cleaned_doc = prepare_text_for_summary(raw_docs[idx], preserve_numeric=preserve_numbers)
-                            doc_sents = [s for dn, ss in cluster_doc_summaries[cluster_id] if dn == doc_name for s in ss]
-                            show_document_modal(
-                                doc_name, raw_docs[idx], cleaned_doc,
-                                cluster_keywords[cluster_id], doc_sents
-                            )
+                    doc_count = len(cluster_docs_indices)
+                    
+                    if st.button(f"Inspect {doc_count} Documents in Cluster {cluster_id}", key=f"btn_cluster_{cluster_id}", use_container_width=True):
+                        # Show first doc as default or a simple list? 
+                        # The original code showed a button for EACH document. I'll stick to a toggle/expander or just keep the buttons but style them.
+                        pass
+                    
+                    with st.expander("Expand Document List"):
+                        for idx in cluster_docs_indices:
+                            doc_name = filenames[idx]
+                            if st.button(doc_name, key=f"btn_cl_doc_{cluster_id}_{idx}", use_container_width=True):
+                                cleaned_doc = prepare_text_for_summary(raw_docs[idx], preserve_numeric=preserve_numbers)
+                                doc_sents = [s for dn, ss in cluster_doc_summaries[cluster_id] if dn == doc_name for s in ss]
+                                show_document_modal(
+                                    doc_name, raw_docs[idx], cleaned_doc,
+                                    cluster_keywords[cluster_id], doc_sents
+                                )
 
                     st.markdown("</div>", unsafe_allow_html=True)
+
 
             else:
                 st.subheader("All Documents")
@@ -611,12 +642,23 @@ if raw_docs:
                 if st.button(doc_name, key=f"btn_single_{idx}"):
                     show_document_modal(doc_name, raw_docs[idx], readable_docs[idx], global_keywords[idx], global_summaries[idx])
 else:
-    # Empty state
+    # --- Polished Empty State ---
     st.markdown(
         """
-        <div style='text-align:center; padding: 4rem 2rem; color: #64748b;'>
-            <h3 style='color: #94a3b8; font-weight: 500;'>No documents loaded</h3>
-            <p>Select a sample corpus from the sidebar or upload your own files to get started.</p>
+        <div style='text-align:center; padding: 6rem 2rem; border: 1px dashed var(--card-border); border-radius: 20px; background: rgba(255,255,255,0.01);'>
+            <div style='font-size: 4rem; margin-bottom: 1.5rem;'>📑</div>
+            <h2 style='font-weight: 600; margin-bottom: 0.5rem;'>Ready to analyze?</h2>
+            <p style='color: var(--text-secondary); max-width: 500px; margin: 0 auto 2rem auto; font-size: 1.1rem;'>
+                Select a research corpus from the sidebar or upload your own PDF/TXT files to begin your semantic discovery journey.
+            </p>
+            <div style='display: flex; justify-content: center; gap: 1rem;'>
+                <div style='background: rgba(139, 92, 246, 0.1); border: 1px solid var(--accent); color: var(--accent); padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: 600;'>
+                    Step 1: Choose Dataset
+                </div>
+                <div style='background: rgba(139, 92, 246, 0.1); border: 1px solid var(--accent); color: var(--accent); padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: 600;'>
+                    Step 2: Run Analysis
+                </div>
+            </div>
         </div>
         """,
         unsafe_allow_html=True
