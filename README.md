@@ -8,7 +8,15 @@
 
 ## Preview
 
-![DocuMind Preview](assets/screenshots/main.png)
+<p align="center">
+  <a href="assets/screenshots/preview.mp4">
+    <img src="assets/screenshots/livepreview.png" alt="DocuMind Demo" width="800"/>
+  </a>
+</p>
+
+<p align="center">
+  ▶️ Click the image to watch full demo
+</p>
 
 ---
 
