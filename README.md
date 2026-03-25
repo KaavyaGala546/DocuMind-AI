@@ -1,6 +1,6 @@
 # DocuMind AI
 
-> Transform unstructured documents into structured insights using semantic analysis, clustering, and summarization.
+> Explore, cluster, and understand entire document collections in seconds using semantic analysis.
 
 **Built to bridge the gap between NLP models and real-world usable systems.**
 
