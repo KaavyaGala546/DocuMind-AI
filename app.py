@@ -431,17 +431,29 @@ def _highlight_text(text, keywords, summary_sentences):
 
 @st.dialog("Intelligence Synthesis Report", width="large")
 def show_document_modal(doc_name, raw_text, cleaned_text, keywords, summary_sentences):
-    st.markdown(f"<div style='margin-bottom: 2rem;'><h1 style='font-size: 2.5rem; margin-bottom: 0.5rem;'>{doc_name}</h1>", unsafe_allow_html=True)
-    
+    keyword_html = "".join(
+        f"<span class='dm-keyword-pill'>{kw}</span>" for kw in keywords[:10]
+    )
+
+    summary_text = " ".join(summary_sentences) if summary_sentences else "No summary generated."
+
     st.markdown(
-        "<div style='display: flex; gap: 0.75rem;'>"
-        "<span class='chip' style='background: rgba(16, 185, 129, 0.05); color: #10B981; border-color: rgba(16, 185, 129, 0.2); font-weight: 600;'>Extraction Fragment</span>"
-        "<span class='chip' style='background: var(--accent-soft); color: var(--accent); border-color: rgba(147, 51, 234, 0.2); font-weight: 600;'>Semantic Anchor</span>"
-        "</div></div>",
+        f"""
+        <div style="margin-bottom: 1.25rem;">
+            <h1 style="font-size: 2rem; margin-bottom: 0.5rem; color: #f8fafc;">{doc_name}</h1>
+            <div class="dm-keyword-pills">{keyword_html}</div>
+            <div class="content-card" style="margin-top: 0.75rem;">
+                <div class="dm-card-label">Summary</div>
+                <div class="dm-card-meta" style="font-size: 1rem; color: #e2e8f0;">
+                    {summary_text}
+                </div>
+            </div>
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
-    view_highlighted, view_original = st.tabs(["Neural Highlights", "Raw Sequence"])
+    view_highlighted, view_original = st.tabs(["Highlighted Analysis", "Original Text"])
 
     with view_highlighted:
         highlighted = _highlight_text(cleaned_text, keywords, summary_sentences)
@@ -449,7 +461,6 @@ def show_document_modal(doc_name, raw_text, cleaned_text, keywords, summary_sent
 
     with view_original:
         st.markdown(f"<div class='doc-viewer'>{raw_text}</div>", unsafe_allow_html=True)
-
 
 
 
