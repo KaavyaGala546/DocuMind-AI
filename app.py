@@ -21,193 +21,216 @@ import re
 CUSTOM_CSS = """
 <style>
 /* ---- Import Google Fonts ---- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@400;500;600;700;800&display=swap');
 
-/* ---- Global Styles & Variables ---- */
+/* ---- Core variables & Neutral palette ---- */
 :root {
-    --bg-dark: #0D1117;
-    --card-bg: #161B22;
-    --card-border: rgba(240, 246, 252, 0.1);
-    --accent: #8B5CF6; /* Violet */
-    --accent-glow: rgba(139, 92, 246, 0.15);
-    --text-primary: #E6EDF3;
-    --text-secondary: #8B949E;
-    --text-muted: #484F58;
-    --success: #238636;
-    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --bg-dark: #0A0C10;
+    --surface-1: #12151C;
+    --surface-2: #1A1F26;
+    --accent: #9333ea; /* More vibrant violet */
+    --accent-soft: rgba(147, 51, 234, 0.1);
+    --border-subtle: rgba(255, 255, 255, 0.04);
+    --border-medium: rgba(255, 255, 255, 0.08);
+    --text-primary: #F9FAFB;
+    --text-secondary: #9CA3AF;
+    --text-muted: #6B7280;
+    --success: #10B981;
+    --font-main: 'Inter', -apple-system, sans-serif;
     --font-heading: 'Outfit', sans-serif;
 }
 
+/* ---- Reset & Global Styling ---- */
 html, body, [data-testid="stAppViewContainer"] {
     background-color: var(--bg-dark) !important;
     font-family: var(--font-main);
+    color: var(--text-primary);
 }
 
 h1, h2, h3, h4, .stHeader {
     font-family: var(--font-heading) !important;
-    color: var(--text-primary) !important;
+    letter-spacing: -0.02em;
 }
 
-/* ---- Component-Specific Styles ---- */
-
-/* Hero Section */
+/* ---- Hero Section (Luxurious) ---- */
 .hero-section {
-    padding: 3rem 0;
-    margin-bottom: 2rem;
+    padding: 4rem 0 3rem 0;
     text-align: center;
 }
 .hero-title {
-    font-size: 3.5rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, #FFF 0%, #8B5CF6 100%);
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(to bottom right, #FFFFFF 30%, #9333ea 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    letter-spacing: -1px;
+    letter-spacing: -0.04em;
 }
 .hero-subtitle {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     color: var(--text-secondary);
     font-weight: 400;
-    max-width: 600px;
+    max-width: 650px;
     margin: 0 auto;
+    line-height: 1.6;
 }
 
-/* Modern KPI Cards */
+/* ---- Modern KPI Grid (Glassmorphism) ---- */
 .kpi-container {
-    display: flex;
-    gap: 1.5rem;
-    margin-bottom: 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 3rem;
 }
 .kpi-card {
-    flex: 1;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 16px;
-    padding: 1.5rem;
-    text-align: left;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-}
-.kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: radial-gradient(circle at top left, var(--accent-glow), transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s;
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 1.75rem 1.5rem;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(8px);
 }
 .kpi-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(139, 92, 246, 0.4);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-}
-.kpi-card:hover::before {
-    opacity: 1;
+    transform: translateY(-4px);
+    border-color: rgba(147, 51, 234, 0.3);
+    background: var(--surface-2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 .kpi-value {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: #FFF;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.2rem;
     font-family: var(--font-heading);
+    letter-spacing: -0.02em;
 }
 .kpi-label {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
+    font-size: 0.75rem;
+    color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
+    letter-spacing: 0.1em;
+    font-weight: 700;
 }
 
-/* Cluster & Content Cards */
+/* ---- Component Cards ---- */
 .content-card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 16px;
-    padding: 1.5rem;
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 1.75rem;
     margin-bottom: 1.5rem;
 }
 .cluster-badge {
-    display: inline-block;
-    background: rgba(139, 92, 246, 0.1);
+    display: inline-flex;
+    align-items: center;
+    background: var(--accent-soft);
     color: var(--accent);
-    padding: 4px 12px;
+    padding: 4px 14px;
     border-radius: 99px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    border: 1px solid rgba(139, 92, 246, 0.2);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(147, 51, 234, 0.2);
 }
 
-/* Pills & Chips */
+/* ---- Refined Chips/Pills ---- */
 .chip {
     display: inline-flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    border: 1px solid var(--border-medium);
     color: var(--text-secondary);
-    padding: 4px 12px;
+    padding: 5px 14px;
     border-radius: 99px;
     font-size: 0.8rem;
-    margin-right: 6px;
-    margin-bottom: 6px;
-    transition: all 0.2s;
+    font-weight: 500;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    transition: all 0.25s ease;
 }
 .chip:hover {
-    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent);
     color: #FFF;
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.02);
 }
 
-/* Tabs Redesign */
+/* ---- Modernized Tabs ---- */
 .stTabs [data-baseweb="tab-list"] {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 6px;
-    border-radius: 12px;
-    gap: 4px;
+    background: transparent !important;
+    padding: 0 !important;
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 2rem;
+    gap: 2rem;
 }
 .stTabs [data-baseweb="tab"] {
-    border-radius: 8px;
-    padding: 8px 20px;
-    color: var(--text-secondary);
-    transition: all 0.2s;
+    background: transparent !important;
+    border: none !important;
+    padding: 12px 0 !important;
+    color: var(--text-muted) !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    transition: color 0.3s !important;
 }
 .stTabs [aria-selected="true"] {
-    background: var(--accent) !important;
+    color: var(--accent) !important;
+    border-bottom: 2px solid var(--accent) !important;
+    border-radius: 0 !important;
+}
+
+/* ---- Document Viewer Refinements ---- */
+.doc-viewer {
+    background: #07090D;
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1.5rem;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #CBD5E1;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+.highlight-summary { 
+    background: rgba(16, 185, 129, 0.1) !important; 
+    border-bottom: 2px solid var(--success); 
     color: #FFF !important;
+    padding: 2px 0;
+}
+.highlight-keyword { 
+    color: var(--accent) !important; 
+    font-weight: 700; 
+    border-bottom: 1px dashed var(--accent);
 }
 
-/* Document Viewer Enhancements */
-.doc-modal-header {
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--card-border);
-    padding-bottom: 1rem;
-}
-.highlight-summary { background: rgba(35, 134, 54, 0.25); border-bottom: 2px solid var(--success); }
-.highlight-keyword { color: var(--accent); font-weight: 600; text-decoration: underline; }
-
-/* Sidebar Cleanup */
+/* ---- Sidebar Overhaul ---- */
 [data-testid="stSidebar"] {
-    background-color: #010409 !important;
+    background-color: #080A0E !important;
+    border-right: 1px solid var(--border-subtle);
 }
 .sidebar-section-header {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 0.15em;
     color: var(--text-muted);
-    font-weight: 700;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
+    font-weight: 800;
+    margin: 2.5rem 0 1rem 0;
+    opacity: 0.8;
 }
 
-/* Hide default streamlit bits */
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
+/* ---- Clean-up default UI ---- */
+.stDeployButton, [data-testid="stToolbar"], #MainMenu, footer {
+    display: none !important;
+}
 div[data-testid="stMetric"] { display: none; }
+div[data-testid="stExpander"] {
+    background: transparent !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 12px !important;
+}
 </style>
 """
+
 
 # ---------------------------------------------------------------------------
 # Plotly Theme
@@ -248,19 +271,19 @@ def _highlight_text(text, keywords, summary_sentences):
     return text
 
 
-@st.dialog("Detailed Analysis Report", width="large")
+@st.dialog("Intelligence Synthesis Report", width="large")
 def show_document_modal(doc_name, raw_text, cleaned_text, keywords, summary_sentences):
-    st.markdown(f"<div class='doc-modal-header'><h3>{doc_name}</h3></div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='margin-bottom: 2rem;'><h1 style='font-size: 2.5rem; margin-bottom: 0.5rem;'>{doc_name}</h1>", unsafe_allow_html=True)
     
     st.markdown(
-        "<div style='margin-bottom: 1.5rem;'>"
-        "<span class='chip' style='background: rgba(35, 134, 54, 0.1); color: #2ea043; border-color: rgba(35, 134, 54, 0.2);'>Summary Segment</span>"
-        "<span class='chip' style='background: rgba(139, 92, 246, 0.1); color: var(--accent); border-color: rgba(139, 92, 246, 0.2);'>Key Term</span>"
-        "</div>",
+        "<div style='display: flex; gap: 0.75rem;'>"
+        "<span class='chip' style='background: rgba(16, 185, 129, 0.05); color: #10B981; border-color: rgba(16, 185, 129, 0.2); font-weight: 600;'>Extraction Fragment</span>"
+        "<span class='chip' style='background: var(--accent-soft); color: var(--accent); border-color: rgba(147, 51, 234, 0.2); font-weight: 600;'>Semantic Anchor</span>"
+        "</div></div>",
         unsafe_allow_html=True
     )
 
-    view_highlighted, view_original = st.tabs(["Highlighted Analysis", "Original Text"])
+    view_highlighted, view_original = st.tabs(["Neural Highlights", "Raw Sequence"])
 
     with view_highlighted:
         highlighted = _highlight_text(cleaned_text, keywords, summary_sentences)
@@ -268,6 +291,7 @@ def show_document_modal(doc_name, raw_text, cleaned_text, keywords, summary_sent
 
     with view_original:
         st.markdown(f"<div class='doc-viewer'>{raw_text}</div>", unsafe_allow_html=True)
+
 
 
 
@@ -468,9 +492,9 @@ if raw_docs:
 
         if len(raw_docs) >= 2:
             st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-            n_topics = st.slider("Number of Topics", min_value=2, max_value=min(6, len(raw_docs)), value=3, key="lda_slider")
+            n_topics = st.slider("Target Themes", min_value=2, max_value=min(6, len(raw_docs)), value=3, key="lda_slider")
 
-            with st.spinner("Fitting LDA model…"):
+            with st.spinner("Decoding latent themes…"):
                 lda_model = perform_lda_modeling(X_tfidf, n_topics=n_topics)
 
             feature_names = vectorizer.get_feature_names_out()
@@ -478,12 +502,13 @@ if raw_docs:
                 top_features_ind = topic.argsort()[:-10 - 1:-1]
                 top_features = [feature_names[i] for i in top_features_ind]
                 
-                st.markdown(f"<div style='margin-bottom: 1.25rem;'>", unsafe_allow_html=True)
-                st.markdown(f"<div class='cluster-badge'>Theme {topic_idx + 1}</div>", unsafe_allow_html=True)
-                chips_html = "".join(f"<div class='chip'>{kw}</div>" for kw in top_features)
+                st.markdown(f"<div style='margin-bottom: 1.5rem;'>", unsafe_allow_html=True)
+                st.markdown(f"<div class='cluster-badge'>Theme Axis {topic_idx + 1}</div>", unsafe_allow_html=True)
+                chips_html = "".join(f"<div class='chip' style='border-color: rgba(255,255,255,0.05);'>{kw}</div>" for kw in top_features)
                 st.markdown(chips_html, unsafe_allow_html=True)
                 st.markdown("</div>", unsafe_allow_html=True)
             st.markdown("</div>", unsafe_allow_html=True)
+
         else:
             st.warning("Upload at least 2 documents for topic modeling.")
 
@@ -534,15 +559,16 @@ if raw_docs:
 
                     fig = px.scatter(
                         cluster_df, x='PCA1', y='PCA2', color='Cluster',
-                        hover_name='Document', title="Semantic Distribution (Latent Space)",
+                        hover_name='Document', title="Semantic Topology (Latent Space)",
                         color_discrete_sequence=px.colors.qualitative.Prism
                     )
                     fig.update_traces(
-                        marker=dict(size=14, opacity=0.9, line=dict(width=1.5, color='rgba(255,255,255,0.2)')),
+                        marker=dict(size=12, opacity=0.8, line=dict(width=1, color='rgba(255,255,255,0.1)')),
                         selector=dict(mode='markers')
                     )
                     fig.update_layout(**PLOTLY_LAYOUT)
                     st.plotly_chart(fig, use_container_width=True)
+
 
                 else:
                     st.info("K=1 — All documents in a single cluster. PCA scatter disabled.")
@@ -576,18 +602,21 @@ if raw_docs:
                             per_doc.append((filenames[idx], sents))
                         cluster_doc_summaries[cid] = per_doc
 
-                st.markdown("<div class='section-divider'></div>", unsafe_allow_html=True)
-                st.subheader("Cluster Insights")
+                st.markdown("<div style='margin-bottom: 2.5rem;'></div>", unsafe_allow_html=True)
+                st.markdown("<div class='sidebar-section-header'>Cluster Insights</div>", unsafe_allow_html=True)
+
 
                 for cluster_id in range(k):
                     st.markdown(f"<div class='content-card'>", unsafe_allow_html=True)
                     st.markdown(f"<div class='cluster-badge'>Cluster {cluster_id}</div>", unsafe_allow_html=True)
 
                     # Keywords as chips
+                    st.markdown("<div style='margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #FFF;'>Core Semantic Markers</div>", unsafe_allow_html=True)
                     chips_html = "".join(
                         f"<div class='chip'>{kw}</div>" for kw in cluster_keywords[cluster_id]
                     )
-                    st.markdown(f"**Top keywords**<br>{chips_html}", unsafe_allow_html=True)
+                    st.markdown(chips_html, unsafe_allow_html=True)
+
 
                     # Per-document summary
                     st.markdown("<div style='margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: 600;'>Document Syntheses</div>", unsafe_allow_html=True)
@@ -624,39 +653,52 @@ if raw_docs:
 
 
             else:
-                st.subheader("All Documents")
+                st.markdown("<div class='sidebar-section-header'>Global Repository</div>", unsafe_allow_html=True)
                 global_keywords = identify_top_keywords(vectorizer, X, top_n=8)
                 readable_docs = [prepare_text_for_summary(doc, preserve_numeric=preserve_numbers) for doc in raw_docs]
                 global_summaries = [generate_extractive_summary(doc, vectorizer, top_n=4) for doc in readable_docs]
+                
                 for idx, doc_name in enumerate(filenames):
-                    if st.button(doc_name, key=f"btn_all_{idx}"):
-                        show_document_modal(doc_name, raw_docs[idx], readable_docs[idx], global_keywords[idx], global_summaries[idx])
+                    st.markdown(f"<div class='content-card' style='padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;'>", unsafe_allow_html=True)
+                    col1, col2 = st.columns([0.8, 0.2])
+                    with col1:
+                        st.markdown(f"**{doc_name}**", unsafe_allow_html=True)
+                        tags = "".join(f"<span class='chip' style='font-size: 0.65rem; padding: 2px 8px; margin-top: 4px;'>{kw}</span>" for kw in global_keywords[idx][:3])
+                        st.markdown(tags, unsafe_allow_html=True)
+                    with col2:
+                        if st.button("Analyze", key=f"btn_all_{idx}", use_container_width=True):
+                            show_document_modal(doc_name, raw_docs[idx], readable_docs[idx], global_keywords[idx], global_summaries[idx])
+                    st.markdown("</div>", unsafe_allow_html=True)
         else:
             st.warning("Upload at least 2 documents to view clustering.")
 
-            st.subheader("All Documents")
+            st.markdown("<div class='sidebar-section-header'>Available Documents</div>", unsafe_allow_html=True)
             global_keywords = identify_top_keywords(vectorizer, X, top_n=8)
             readable_docs = [prepare_text_for_summary(doc, preserve_numeric=preserve_numbers) for doc in raw_docs]
             global_summaries = [generate_extractive_summary(doc, vectorizer, top_n=4) for doc in readable_docs]
             for idx, doc_name in enumerate(filenames):
-                if st.button(doc_name, key=f"btn_single_{idx}"):
+                st.markdown(f"<div class='content-card' style='padding: 1rem 1.25rem;'>", unsafe_allow_html=True)
+                st.markdown(f"**{doc_name}**", unsafe_allow_html=True)
+                if st.button("View Detailed Report", key=f"btn_single_{idx}", use_container_width=True):
                     show_document_modal(doc_name, raw_docs[idx], readable_docs[idx], global_keywords[idx], global_summaries[idx])
+                st.markdown("</div>", unsafe_allow_html=True)
+
 else:
-    # --- Polished Empty State ---
+    # --- Ultra-Premium Empty State ---
     st.markdown(
         """
-        <div style='text-align:center; padding: 6rem 2rem; border: 1px dashed var(--card-border); border-radius: 20px; background: rgba(255,255,255,0.01);'>
-            <div style='font-size: 4rem; margin-bottom: 1.5rem;'>📑</div>
-            <h2 style='font-weight: 600; margin-bottom: 0.5rem;'>Ready to analyze?</h2>
-            <p style='color: var(--text-secondary); max-width: 500px; margin: 0 auto 2rem auto; font-size: 1.1rem;'>
-                Select a research corpus from the sidebar or upload your own PDF/TXT files to begin your semantic discovery journey.
+        <div style='text-align:center; padding: 8rem 2rem; border: 1px dashed var(--border-medium); border-radius: 24px; background: rgba(255,255,255,0.01); backdrop-filter: blur(10px);'>
+            <div style='font-size: 5rem; margin-bottom: 2rem; filter: saturate(0.5) opacity(0.8);'>🧪</div>
+            <h1 style='font-weight: 800; margin-bottom: 0.75rem; font-size: 2.5rem; color: #FFF;'>Intelligence Awaits</h1>
+            <p style='color: var(--text-secondary); max-width: 550px; margin: 0 auto 3rem auto; font-size: 1.15rem; font-weight: 400; line-height: 1.7;'>
+                DocuMind AI is ready to distill your research. Select a corpus from the sidebar or upload your own neural data to begin the synthesis.
             </p>
-            <div style='display: flex; justify-content: center; gap: 1rem;'>
-                <div style='background: rgba(139, 92, 246, 0.1); border: 1px solid var(--accent); color: var(--accent); padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: 600;'>
-                    Step 1: Choose Dataset
+            <div style='display: flex; justify-content: center; gap: 1.5rem;'>
+                <div style='background: var(--accent-soft); border: 1px solid rgba(147, 51, 234, 0.3); color: var(--accent); padding: 12px 24px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;'>
+                    1. Select Data
                 </div>
-                <div style='background: rgba(139, 92, 246, 0.1); border: 1px solid var(--accent); color: var(--accent); padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: 600;'>
-                    Step 2: Run Analysis
+                <div style='background: rgba(255,255,255,0.03); border: 1px solid var(--border-medium); color: var(--text-secondary); padding: 12px 24px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;'>
+                    2. Scale Insights
                 </div>
             </div>
         </div>
