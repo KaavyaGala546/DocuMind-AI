@@ -45,7 +45,9 @@ html, body, [data-testid="stAppViewContainer"] {
     background-color: var(--bg-dark) !important;
     font-family: var(--font-main);
     color: var(--text-primary);
+    scroll-behavior: smooth;
 }
+
 
 h1, h2, h3, h4, .stHeader {
     font-family: var(--font-heading) !important;
@@ -58,14 +60,15 @@ h1, h2, h3, h4, .stHeader {
     text-align: center;
 }
 .hero-title {
-    font-size: 4rem;
+    font-size: 4.2rem;
     font-weight: 800;
     margin-bottom: 0.75rem;
-    background: linear-gradient(to bottom right, #FFFFFF 30%, #9333ea 100%);
+    background: linear-gradient(to bottom, #FFFFFF 50%, #B794F4 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.05em;
 }
+
 .hero-subtitle {
     font-size: 1.2rem;
     color: var(--text-secondary);
@@ -78,10 +81,11 @@ h1, h2, h3, h4, .stHeader {
 /* ---- Modern KPI Grid (Glassmorphism) ---- */
 .kpi-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr); /* 4 Columns for 4 KPIs */
     gap: 1rem;
     margin-bottom: 3rem;
 }
+
 .kpi-card {
     background: var(--surface-1);
     border: 1px solid var(--border-subtle);
@@ -324,62 +328,44 @@ st.markdown(
 # Sidebar
 # ---------------------------------------------------------------------------
 
-st.sidebar.markdown("<div class='sidebar-section-header'>Analysis Engine</div>", unsafe_allow_html=True)
+st.sidebar.markdown("<div class='sidebar-section-header'>Data Source</div>", unsafe_allow_html=True)
+CORPUS_OPTIONS = {
+    "Research Repository (PDF)": "research_documents/pdf_papers",
+    "Technical Articles (TXT)": "research_documents",
+    "Semantic Equivalence Demo": "research_documents/semantic_demo",
+    "Custom Machine Upload": None,
+}
 
-vectorization_mode = st.sidebar.radio(
-    "Vectorization Mode",
-    ["TF-IDF (Classical)", "Semantic Embeddings (SBERT)"],
-    index=0,
-    help="TF-IDF uses lexical word frequencies. Semantic Embeddings use a pre-trained encoder to capture meaning.",
+selected_corpus_label = st.sidebar.selectbox(
+    "Intel Source",
+    options=list(CORPUS_OPTIONS.keys()),
     label_visibility="collapsed"
 )
+selected_corpus_path = CORPUS_OPTIONS[selected_corpus_label]
 
-use_semantic = vectorization_mode == "Semantic Embeddings (SBERT)"
+uploaded_files = st.sidebar.file_uploader(
+    "Upload Source Fragments (.txt, .pdf)",
+    accept_multiple_files=True,
+    disabled=(selected_corpus_path is not None),
+    label_visibility="visible"
+)
 
+st.sidebar.markdown("<div class='sidebar-section-header'>Vectorization Engine</div>", unsafe_allow_html=True)
+vectorization_mode = st.sidebar.radio(
+    "Processing Mode",
+    ["Neural Embeddings (SBERT)", "Lexical Frequency (TF-IDF)"],
+    index=0,
+    label_visibility="collapsed"
+)
+use_semantic = "Neural" in vectorization_mode
+
+st.sidebar.markdown("<div class='sidebar-section-header'>General Settings</div>", unsafe_allow_html=True)
 preserve_numbers = st.sidebar.toggle(
-    "Retain Numerical Data (e.g., statistics, years)",
+    "Preserve Numeric Context",
     value=True,
     disabled=use_semantic
 )
 
-st.sidebar.markdown("<div class='sidebar-section-header'>Data Source</div>", unsafe_allow_html=True)
-
-
-CORPUS_OPTIONS = {
-    "Upload My Own Files": None,
-    "Primary Research Corpus (Text)": "research_documents",
-    "AI Research Papers (PDF)": "research_documents/pdf_papers",
-    "Semantic Limitation Demo": "research_documents/semantic_demo",
-}
-
-selected_corpus_label = st.sidebar.selectbox(
-    "Choose Corpus",
-    options=list(CORPUS_OPTIONS.keys()),
-    label_visibility="collapsed"
-)
-
-selected_corpus_path = CORPUS_OPTIONS[selected_corpus_label]
-
-if selected_corpus_label == "Semantic Limitation Demo":
-    st.sidebar.warning(
-        "**Why this demo?**\n\n"
-        "Three documents describe the *exact same event* — online shopping — "
-        "using completely different vocabulary.\n\n"
-        "TF-IDF is lexical, so it **cannot** recognise semantic equivalence. "
-        "Expect near-zero similarity."
-    )
-elif selected_corpus_label == "AI Research Papers (PDF)":
-    st.sidebar.info(
-        "**PDF Corpus**\n\n"
-        "Classic CS papers (Attention, BERT, ResNet, MapReduce, GFS) + an outlier (Cricket Rule Book). "
-        "Perfect for demonstrating domain-based clustering."
-    )
-
-uploaded_files = st.sidebar.file_uploader(
-    "Upload .txt or .pdf files",
-    accept_multiple_files=True,
-    disabled=(selected_corpus_path is not None)
-)
 
 # ---------------------------------------------------------------------------
 # Load Documents
@@ -431,123 +417,60 @@ if raw_docs:
         feature_label = "Vocabulary Terms"
         engine_label = "K-Means++"
 
+    # -- Determine Suggested K for KPI --
+    with st.spinner("Analyzing semantic patterns…"):
+        suggested_k, _ = calculate_optimal_clusters(X)
+
     # -- Modern KPI Cards --
     st.markdown(
         f"""
         <div class='kpi-container'>
             <div class='kpi-card'>
                 <div class='kpi-value'>{len(raw_docs)}</div>
-                <div class='kpi-label'>Documents Loaded</div>
+                <div class='kpi-label'>Intelligence Pool</div>
             </div>
             <div class='kpi-card'>
                 <div class='kpi-value'>{feature_count}</div>
                 <div class='kpi-label'>{feature_label}</div>
             </div>
             <div class='kpi-card'>
+                <div class='kpi-value'>{suggested_k}</div>
+                <div class='kpi-label'>Suggested Clusters</div>
+            </div>
+            <div class='kpi-card'>
                 <div class='kpi-value'>{engine_label}</div>
-                <div class='kpi-label'>Analysis Engine</div>
+                <div class='kpi-label'>Neural Engine</div>
             </div>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-
-    st.markdown("<div class='section-divider'></div>", unsafe_allow_html=True)
-
-    tab1, tab2, tab3 = st.tabs(["Clustering Insights", "LDA Topic Modeling", "Similarity Matrix"])
+    # ---------------------------------------------------------------------------
+    # Information Architecture Restructuring
+    # ---------------------------------------------------------------------------
+    
+    st.markdown("<div style='margin-bottom: 1rem;'></div>", unsafe_allow_html=True)
+    tab_clusters, tab_topics, tab_similarity, tab_explorer = st.tabs([
+        "Clusters", "Topics", "Similarity", "Explorer"
+    ])
 
     # ---------------------------------------------------------------
-    # TAB 3 — Similarity Matrix
+    # CLUSTERS TAB
     # ---------------------------------------------------------------
-    with tab3:
-        st.subheader("Document Similarity (Cosine Matrix)")
-        with st.expander("How does Cosine Similarity work?"):
-            st.write(
-                "Cosine similarity measures the angle between two document vectors in TF-IDF space. "
-                "**1.0** = identical term distributions, **0.0** = nothing in common. "
-                "It's length-agnostic — a 10-page and 2-page paper on the same topic still score highly."
-            )
-
+    with tab_clusters:
+        st.markdown("<div class='sidebar-section-header'>Semantic Mapping</div>", unsafe_allow_html=True)
         if len(raw_docs) >= 2:
-            with st.spinner("Computing pairwise similarities…"):
-                similarity = calculate_cosine_similarity(X)
-                fig_sim = render_similarity_heatmap(similarity, filenames)
-                fig_sim.update_layout(**PLOTLY_LAYOUT)
-                st.plotly_chart(fig_sim, width='stretch')
-        else:
-            st.warning("Upload at least 2 documents to view similarity.")
-
-    # ---------------------------------------------------------------
-    # TAB 2 — LDA
-    # ---------------------------------------------------------------
-    with tab2:
-        st.subheader("Topic Extraction via LDA")
-        with st.expander("What is LDA?"):
-            st.write(
-                "Latent Dirichlet Allocation discovers hidden 'topics' — each topic is a distribution "
-                "over words, and each document is a mixture of topics. Great for finding dominant themes "
-                "without manual labelling."
-            )
-
-        if len(raw_docs) >= 2:
-            st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-            n_topics = st.slider("Target Themes", min_value=2, max_value=min(6, len(raw_docs)), value=3, key="lda_slider")
-
-            with st.spinner("Decoding latent themes…"):
-                lda_model = perform_lda_modeling(X_tfidf, n_topics=n_topics)
-
-            feature_names = vectorizer.get_feature_names_out()
-            for topic_idx, topic in enumerate(lda_model.components_):
-                top_features_ind = topic.argsort()[:-10 - 1:-1]
-                top_features = [feature_names[i] for i in top_features_ind]
-                
-                st.markdown(f"<div style='margin-bottom: 1.5rem;'>", unsafe_allow_html=True)
-                st.markdown(f"<div class='cluster-badge'>Theme Axis {topic_idx + 1}</div>", unsafe_allow_html=True)
-                chips_html = "".join(f"<div class='chip' style='border-color: rgba(255,255,255,0.05);'>{kw}</div>" for kw in top_features)
-                st.markdown(chips_html, unsafe_allow_html=True)
-                st.markdown("</div>", unsafe_allow_html=True)
-            st.markdown("</div>", unsafe_allow_html=True)
-
-        else:
-            st.warning("Upload at least 2 documents for topic modeling.")
-
-
-    # ---------------------------------------------------------------
-    # TAB 1 — Clustering
-    # ---------------------------------------------------------------
-    with tab1:
-        st.subheader("Semantic K-Means Clustering")
-        with st.expander("How does K-Means Clustering work?"):
-            st.write(
-                "K-Means partitions documents into *k* groups by minimising distance to cluster centroids. "
-                "We use the **Silhouette Score** (−1 to 1) to auto-suggest the best *k* — higher = better separation."
-            )
-
-        if len(raw_docs) >= 2:
-            with st.spinner("Evaluating optimal cluster count…"):
-                suggested_k, scores_per_k = calculate_optimal_clusters(X)
-
-            # -- Silhouette Chart --
-            if len(raw_docs) >= 3 and scores_per_k:
-                st.markdown("#### Silhouette Score Evaluation")
-                fig_sil = render_silhouette_chart(scores_per_k)
-                if fig_sil:
-                    fig_sil.update_layout(**PLOTLY_LAYOUT)
-                    st.plotly_chart(fig_sil, width='stretch')
-                    st.caption("Higher silhouette score → better-separated clusters. The peak indicates the recommended *k*.")
-            elif len(raw_docs) < 3:
-                st.info("Need at least 3 documents for silhouette analysis.")
-
             k = st.slider(
-                "Number of Clusters (K-Means)",
+                "Cluster Resolution (K-Means)",
                 min_value=1,
                 max_value=len(raw_docs),
-                value=suggested_k
+                value=suggested_k,
+                help="Adjust the granularity of semantic groupings."
             )
 
             if k > 0:
-                with st.spinner("Running K-Means…"):
+                with st.spinner("Synthesizing clusters…"):
                     labels = perform_kmeans_clustering(X, k)
                 cluster_df = pd.DataFrame({"Document": filenames, "Cluster": labels})
 
@@ -559,7 +482,7 @@ if raw_docs:
 
                     fig = px.scatter(
                         cluster_df, x='PCA1', y='PCA2', color='Cluster',
-                        hover_name='Document', title="Semantic Topology (Latent Space)",
+                        hover_name='Document', title="Semantic Topology",
                         color_discrete_sequence=px.colors.qualitative.Prism
                     )
                     fig.update_traces(
@@ -568,119 +491,142 @@ if raw_docs:
                     )
                     fig.update_layout(**PLOTLY_LAYOUT)
                     st.plotly_chart(fig, use_container_width=True)
-
-
                 else:
-                    st.info("K=1 — All documents in a single cluster. PCA scatter disabled.")
+                    st.info("K=1 — All documents in a single cluster.")
 
-                # -- Cluster-level features --
+                # -- Cluster-level features & Synthesis --
                 cluster_texts = {i: "" for i in range(k)}
                 for label, text in zip(labels, raw_docs):
                     cluster_texts[label] += text + " "
 
                 cluster_list = [cluster_texts[i] for i in range(k)]
 
-                with st.spinner("Extracting cluster insights…"):
+                with st.spinner("Extracting semantic markers…"):
                     processed_clusters = [execute_preprocessing_pipeline(c, preserve_numeric=preserve_numbers) for c in cluster_list]
                     cluster_X, cluster_vectorizer = extract_tfidf_features(processed_clusters)
 
                     cluster_vocab_size = len(cluster_vectorizer.get_feature_names_out())
-                    dynamic_top_n = max(3, min(10, int(0.1 * cluster_vocab_size)))
+                    dynamic_top_n = max(5, min(12, int(0.12 * cluster_vocab_size)))
 
                     cluster_keywords = identify_top_keywords(
                         cluster_vectorizer, cluster_X, top_n=dynamic_top_n
                     )
 
-                    # Per-document summaries within each cluster
-                    cluster_doc_summaries = {}
+                    # Cluster Synthesis
+                    cluster_synthesis = {}
                     for cid in range(k):
-                        doc_indices = [i for i, lbl in enumerate(labels) if lbl == cid]
-                        per_doc = []
-                        for idx in doc_indices:
-                            readable = prepare_text_for_summary(raw_docs[idx], preserve_numeric=preserve_numbers)
-                            sents = generate_extractive_summary(readable, cluster_vectorizer, top_n=2)
-                            per_doc.append((filenames[idx], sents))
-                        cluster_doc_summaries[cid] = per_doc
+                        # Join all text for the cluster and get top sentences
+                        full_cluster_text = cluster_texts[cid]
+                        # Clean it up
+                        readable_cluster = prepare_text_for_summary(full_cluster_text, preserve_numeric=preserve_numbers)
+                        # Extract top 3 sentences for the WHOLE cluster
+                        synthesis_sents = generate_extractive_summary(readable_cluster, cluster_vectorizer, top_n=3)
+                        cluster_synthesis[cid] = " ".join(synthesis_sents)
 
-                st.markdown("<div style='margin-bottom: 2.5rem;'></div>", unsafe_allow_html=True)
-                st.markdown("<div class='sidebar-section-header'>Cluster Insights</div>", unsafe_allow_html=True)
-
-
+                # -- Display Cluster Cards --
                 for cluster_id in range(k):
                     st.markdown(f"<div class='content-card'>", unsafe_allow_html=True)
                     st.markdown(f"<div class='cluster-badge'>Cluster {cluster_id}</div>", unsafe_allow_html=True)
 
-                    # Keywords as chips
-                    st.markdown("<div style='margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #FFF;'>Core Semantic Markers</div>", unsafe_allow_html=True)
-                    chips_html = "".join(
-                        f"<div class='chip'>{kw}</div>" for kw in cluster_keywords[cluster_id]
-                    )
+                    # Synthesis
+                    st.markdown(f"<p style='font-size: 1.05rem; line-height: 1.6; color: #E2E8F0; margin-bottom: 1.5rem;'>{cluster_synthesis[cluster_id]}</p>", unsafe_allow_html=True)
+
+                    # Keywords
+                    chips_html = "".join(f"<div class='chip'>{kw}</div>" for kw in cluster_keywords[cluster_id])
                     st.markdown(chips_html, unsafe_allow_html=True)
 
-
-                    # Per-document summary
-                    st.markdown("<div style='margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: 600;'>Document Syntheses</div>", unsafe_allow_html=True)
-                    for doc_name, sents in cluster_doc_summaries[cluster_id]:
-                        if sents:
-                            combined = " ".join(sents)
-                            st.markdown(
-                                f"<div class='summary-item'><strong>{doc_name}:</strong> {combined}</div>",
-                                unsafe_allow_html=True
-                            )
-
-                    # Document inspection button
-                    st.markdown("<div style='margin-top: 1.5rem;'></div>", unsafe_allow_html=True)
+                    # Document List toggle
                     cluster_docs_indices = [i for i, lbl in enumerate(labels) if lbl == cluster_id]
-                    doc_count = len(cluster_docs_indices)
-                    
-                    if st.button(f"Inspect {doc_count} Documents in Cluster {cluster_id}", key=f"btn_cluster_{cluster_id}", use_container_width=True):
-                        # Show first doc as default or a simple list? 
-                        # The original code showed a button for EACH document. I'll stick to a toggle/expander or just keep the buttons but style them.
-                        pass
-                    
-                    with st.expander("Expand Document List"):
+                    with st.expander(f"Inspect {len(cluster_docs_indices)} Neural Sources"):
                         for idx in cluster_docs_indices:
                             doc_name = filenames[idx]
-                            if st.button(doc_name, key=f"btn_cl_doc_{cluster_id}_{idx}", use_container_width=True):
-                                cleaned_doc = prepare_text_for_summary(raw_docs[idx], preserve_numeric=preserve_numbers)
-                                doc_sents = [s for dn, ss in cluster_doc_summaries[cluster_id] if dn == doc_name for s in ss]
-                                show_document_modal(
-                                    doc_name, raw_docs[idx], cleaned_doc,
-                                    cluster_keywords[cluster_id], doc_sents
-                                )
+                            if st.button(f"Analyze: {doc_name}", key=f"btn_cl_doc_{cluster_id}_{idx}", use_container_width=True):
+                                # Just a quick way to find the pre-computed summary if needed, or just run a quick one
+                                sents = generate_extractive_summary(prepare_text_for_summary(raw_docs[idx], preserve_numeric=preserve_numbers), cluster_vectorizer, top_n=3)
+                                show_document_modal(doc_name, raw_docs[idx], raw_docs[idx], cluster_keywords[cluster_id], sents)
 
-                    st.markdown("</div>", unsafe_allow_html=True)
-
-
-            else:
-                st.markdown("<div class='sidebar-section-header'>Global Repository</div>", unsafe_allow_html=True)
-                global_keywords = identify_top_keywords(vectorizer, X, top_n=8)
-                readable_docs = [prepare_text_for_summary(doc, preserve_numeric=preserve_numbers) for doc in raw_docs]
-                global_summaries = [generate_extractive_summary(doc, vectorizer, top_n=4) for doc in readable_docs]
-                
-                for idx, doc_name in enumerate(filenames):
-                    st.markdown(f"<div class='content-card' style='padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;'>", unsafe_allow_html=True)
-                    col1, col2 = st.columns([0.8, 0.2])
-                    with col1:
-                        st.markdown(f"**{doc_name}**", unsafe_allow_html=True)
-                        tags = "".join(f"<span class='chip' style='font-size: 0.65rem; padding: 2px 8px; margin-top: 4px;'>{kw}</span>" for kw in global_keywords[idx][:3])
-                        st.markdown(tags, unsafe_allow_html=True)
-                    with col2:
-                        if st.button("Analyze", key=f"btn_all_{idx}", use_container_width=True):
-                            show_document_modal(doc_name, raw_docs[idx], readable_docs[idx], global_keywords[idx], global_summaries[idx])
                     st.markdown("</div>", unsafe_allow_html=True)
         else:
             st.warning("Upload at least 2 documents to view clustering.")
 
-            st.markdown("<div class='sidebar-section-header'>Available Documents</div>", unsafe_allow_html=True)
-            global_keywords = identify_top_keywords(vectorizer, X, top_n=8)
-            readable_docs = [prepare_text_for_summary(doc, preserve_numeric=preserve_numbers) for doc in raw_docs]
-            global_summaries = [generate_extractive_summary(doc, vectorizer, top_n=4) for doc in readable_docs]
-            for idx, doc_name in enumerate(filenames):
-                st.markdown(f"<div class='content-card' style='padding: 1rem 1.25rem;'>", unsafe_allow_html=True)
-                st.markdown(f"**{doc_name}**", unsafe_allow_html=True)
-                if st.button("View Detailed Report", key=f"btn_single_{idx}", use_container_width=True):
-                    show_document_modal(doc_name, raw_docs[idx], readable_docs[idx], global_keywords[idx], global_summaries[idx])
+    # ---------------------------------------------------------------
+    # TOPICS TAB (LDA)
+    # ---------------------------------------------------------------
+    with tab_topics:
+        st.markdown("<div class='sidebar-section-header'>Thematic Discovery</div>", unsafe_allow_html=True)
+        if len(raw_docs) >= 2:
+            st.markdown("<div class='content-card' style='padding: 2rem;'>", unsafe_allow_html=True)
+            st.markdown("<p style='color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem;'>Latent Dirichlet Allocation identifies the fundamental thematic axes across your corpus.</p>", unsafe_allow_html=True)
+            
+            n_topics = st.slider("Thematic Resolution", min_value=2, max_value=min(6, len(raw_docs)), value=3, key="lda_slider_final")
+
+            with st.spinner("Decoding latent themes…"):
+                lda_model = perform_lda_modeling(X_tfidf, n_topics=n_topics)
+
+            feature_names = vectorizer.get_feature_names_out()
+            for topic_idx, topic in enumerate(lda_model.components_):
+                top_features_ind = topic.argsort()[:-10 - 1:-1]
+                top_features = [feature_names[i] for i in top_features_ind]
+                
+                st.markdown(f"<div style='margin-bottom: 2.5rem;'>", unsafe_allow_html=True)
+                st.markdown(f"<div class='cluster-badge' style='background: rgba(255,255,255,0.03); color: #FFF; border-color: var(--border-medium);'>Theme Axis {topic_idx + 1}</div>", unsafe_allow_html=True)
+                chips_html = "".join(f"<div class='chip' style='border-color: rgba(255,255,255,0.05);'>{kw}</div>" for kw in top_features)
+                st.markdown(chips_html, unsafe_allow_html=True)
+                st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+        else:
+            st.warning("Need more documents for topic modeling.")
+
+
+    # ---------------------------------------------------------------
+    # SIMILARITY TAB
+    # ---------------------------------------------------------------
+    with tab_similarity:
+        st.markdown("<div class='sidebar-section-header'>Semantic Proximity</div>", unsafe_allow_html=True)
+        if len(raw_docs) >= 2:
+            st.markdown("<p style='color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem;'>Pairwise cosine similarity matrix mapping lexical and semantic relationships.</p>", unsafe_allow_html=True)
+            with st.spinner("Calculating matrix…"):
+                similarity = calculate_cosine_similarity(X)
+                fig_sim = render_similarity_heatmap(similarity, filenames)
+                fig_sim.update_layout(**PLOTLY_LAYOUT)
+                st.plotly_chart(fig_sim, use_container_width=True)
+        else:
+            st.warning("Upload at least 2 documents.")
+
+
+    # ---------------------------------------------------------------
+    # EXPLORER TAB
+    # ---------------------------------------------------------------
+    with tab_explorer:
+        st.markdown("<div class='sidebar-section-header'>Neural Repository</div>", unsafe_allow_html=True)
+        global_keywords = identify_top_keywords(vectorizer, X, top_n=10)
+        readable_docs = [prepare_text_for_summary(doc, preserve_numeric=preserve_numbers) for doc in raw_docs]
+        global_summaries = [generate_extractive_summary(doc, vectorizer, top_n=5) for doc in readable_docs]
+        
+        # Search filter
+        search_query = st.text_input("Filter Neural Repository", placeholder="🔍 Search by name or content fragment...", label_visibility="collapsed")
+
+        
+        filtered_indices = [
+            i for i, name in enumerate(filenames) 
+            if search_query.lower() in name.lower() or search_query.lower() in raw_docs[i].lower()
+        ]
+
+        if not filtered_indices:
+            st.info("No documents match your query.")
+        else:
+            for idx in filtered_indices:
+                doc_name = filenames[idx]
+                st.markdown(f"<div class='content-card' style='padding: 1.5rem;'>", unsafe_allow_html=True)
+                col_info, col_action = st.columns([0.8, 0.2])
+                with col_info:
+                    st.markdown(f"<h4 style='margin-bottom: 0.5rem;'>{doc_name}</h4>", unsafe_allow_html=True)
+                    tags = "".join(f"<span class='chip' style='font-size: 0.7rem; padding: 3px 10px;'>{kw}</span>" for kw in global_keywords[idx][:4])
+                    st.markdown(tags, unsafe_allow_html=True)
+                with col_action:
+                    st.markdown("<div style='margin-top: 0.5rem;'></div>", unsafe_allow_html=True)
+                    if st.button("Synthesize", key=f"btn_explore_{idx}", use_container_width=True):
+                        show_document_modal(doc_name, raw_docs[idx], readable_docs[idx], global_keywords[idx], global_summaries[idx])
                 st.markdown("</div>", unsafe_allow_html=True)
 
 else:
