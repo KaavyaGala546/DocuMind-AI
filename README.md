@@ -8,7 +8,7 @@
 
 ## Preview
 
-![DocuMind Preview](assets/screenshots/hero.png)
+![DocuMind Preview](assets/screenshots/main.png)
 
 ---
 
