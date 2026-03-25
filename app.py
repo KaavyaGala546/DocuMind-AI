@@ -630,8 +630,8 @@ st.markdown(
     
     st.markdown("<div style='margin-bottom: 1rem;'></div>", unsafe_allow_html=True)
     tab_clusters, tab_topics, tab_similarity, tab_explorer = st.tabs([
-        "Clusters", "Topics", "Similarity", "Explorer"
-    ])
+    "Clusters", "Topics", "Similarity", "Document Explorer"
+])
 
     # ---------------------------------------------------------------
     # CLUSTERS TAB
