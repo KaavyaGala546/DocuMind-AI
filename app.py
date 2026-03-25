@@ -720,7 +720,8 @@ if raw_docs:
                             if st.button(f"Analyze: {doc_name}", key=f"btn_cl_doc_{cluster_id}_{idx}", use_container_width=True):
                                 # Just a quick way to find the pre-computed summary if needed, or just run a quick one
                                 sents = generate_extractive_summary(prepare_text_for_summary(raw_docs[idx], preserve_numeric=preserve_numbers), cluster_vectorizer, top_n=3)
-                                show_document_modal(doc_name, raw_docs[idx], raw_docs[idx], cluster_keywords[cluster_id], sents)
+                                cleaned_doc = prepare_text_for_summary(raw_docs[idx], preserve_numeric=preserve_numbers)
+show_document_modal(doc_name, raw_docs[idx], cleaned_doc, cluster_keywords[cluster_id], sents)
 
                     st.markdown("</div>", unsafe_allow_html=True)
         else:
