@@ -776,7 +776,7 @@ if raw_docs:
     # ---------------------------------------------------------------
     with tab_explorer:
         st.markdown("<div class='sidebar-section-header'>Neural Repository</div>", unsafe_allow_html=True)
-        global_keywords = identify_top_keywords(vectorizer, X, top_n=10)
+        global_keywords = identify_top_keywords(vectorizer, X_tfidf, top_n=10)
         readable_docs = [prepare_text_for_summary(doc, preserve_numeric=preserve_numbers) for doc in raw_docs]
         global_summaries = [generate_extractive_summary(doc, vectorizer, top_n=5) for doc in readable_docs]
         
