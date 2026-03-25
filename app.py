@@ -28,10 +28,13 @@ CUSTOM_CSS = """
         --panel-2: #0f172a;
         --card: rgba(15, 23, 42, 0.82);
         --border: rgba(148, 163, 184, 0.16);
+        --border-medium: rgba(148, 163, 184, 0.22);
         --text: #e5e7eb;
+        --text-secondary: #94a3b8;
         --muted: #94a3b8;
         --accent: #7c3aed;
         --accent-2: #60a5fa;
+        --accent-soft: rgba(124, 58, 237, 0.12);
         --success: #22c55e;
         --warning: #f59e0b;
         --shadow: 0 10px 30px rgba(2, 6, 23, 0.35);
@@ -133,7 +136,8 @@ CUSTOM_CSS = """
         margin-top: 0.2rem;
     }
 
-    .dm-chip {
+    .dm-chip,
+    .chip {
         display: inline-flex;
         align-items: center;
         gap: 0.45rem;
@@ -144,13 +148,16 @@ CUSTOM_CSS = """
         color: #dbeafe;
         font-size: 0.84rem;
         font-weight: 600;
+        margin: 0.25rem 0.35rem 0.25rem 0;
     }
 
-    .dm-section-title {
-        font-size: 1.1rem;
+    .sidebar-section-header {
+        font-size: 0.78rem;
         font-weight: 700;
-        color: #f8fafc;
-        margin: 1.2rem 0 0.8rem 0;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #bfdbfe;
+        margin: 1rem 0 0.65rem 0;
     }
 
     .dm-card {
@@ -184,6 +191,74 @@ CUSTOM_CSS = """
         color: #cbd5e1;
         font-size: 0.92rem;
         line-height: 1.5;
+    }
+
+    .kpi-container {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+        margin: 1rem 0 1.25rem 0;
+    }
+
+    .kpi-card {
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.88), rgba(17, 24, 39, 0.88));
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 1.2rem 1.2rem 1.05rem;
+        box-shadow: var(--shadow);
+        min-height: 130px;
+    }
+
+    .kpi-value {
+        color: #f8fafc;
+        font-size: 1.8rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 0.45rem;
+        letter-spacing: -0.02em;
+        word-break: break-word;
+    }
+
+    .kpi-label {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .content-card {
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.88), rgba(17, 24, 39, 0.88));
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 1.4rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 1rem;
+    }
+
+    .cluster-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.45rem 0.8rem;
+        border-radius: 999px;
+        background: rgba(124, 58, 237, 0.14);
+        border: 1px solid rgba(124, 58, 237, 0.24);
+        color: #e9d5ff;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .doc-viewer {
+        background: rgba(15, 23, 42, 0.72);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 1.25rem;
+        color: var(--text);
+        line-height: 1.8;
+        white-space: pre-wrap;
+        max-height: 70vh;
+        overflow-y: auto;
     }
 
     .dm-divider {
@@ -301,9 +376,20 @@ CUSTOM_CSS = """
         font-size: 0.8rem;
         font-weight: 600;
     }
+
+    @media (max-width: 1100px) {
+        .kpi-container {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 700px) {
+        .kpi-container {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 """
-
 # ---------------------------------------------------------------------------
 # Plotly Theme
 # ---------------------------------------------------------------------------
@@ -371,22 +457,34 @@ def show_document_modal(doc_name, raw_text, cleaned_text, keywords, summary_sent
 # Page Config & CSS Injection
 # ---------------------------------------------------------------------------
 
-st.set_page_config(layout="wide", page_title="DocuMind AI", page_icon="🧠")
+st.set_page_config(
+    layout="wide",
+    page_title="DocuMind AI",
+    page_icon="🧠"
+)
+
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
-# ---------------------------------------------------------------------------
-# Hero Header
-# ---------------------------------------------------------------------------
-
+# Hero Banner
 st.markdown(
     """
-    <div class='hero-section'>
-        <div class='hero-title'>DocuMind AI</div>
-        <div class='hero-subtitle'>
+    <section class="dm-hero">
+        <div class="dm-kicker">AI Document Intelligence Workspace</div>
+        <h1 class="dm-title">DocuMind AI</h1>
+        <p class="dm-subtitle">
             Document intelligence for research, analysis, and semantic discovery.
-            Extract hidden themes and measure similarity with precision.
+            Upload PDFs or text files, compare semantic similarity, discover hidden themes,
+            cluster related documents, and extract readable summaries from complex corpora.
+        </p>
+        <div class="dm-chip-row">
+            <span class="dm-chip">📄 PDF / TXT</span>
+            <span class="dm-chip">🧮 TF-IDF</span>
+            <span class="dm-chip">🧠 SBERT</span>
+            <span class="dm-chip">🗂️ Clustering</span>
+            <span class="dm-chip">🧭 Topics</span>
+            <span class="dm-chip">✂️ Summaries</span>
         </div>
-    </div>
+    </section>
     """,
     unsafe_allow_html=True
 )
