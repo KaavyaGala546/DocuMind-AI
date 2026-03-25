@@ -1,8 +1,14 @@
 # DocuMind AI
 
-**Document intelligence for research, analysis, and semantic discovery.**
+> Transform unstructured documents into structured insights using semantic analysis, clustering, and summarization.
 
-DocuMind AI is an NLP-powered system that transforms unstructured documents into structured insights through semantic similarity, clustering, topic modeling, and summarization — all within an interactive workspace.
+**Built to bridge the gap between NLP models and real-world usable systems.**
+
+---
+
+## Preview
+
+![DocuMind Preview](assets/screenshots/hero.png)
 
 ---
 
@@ -12,33 +18,61 @@ https://docu-mind-ai-kaavya.streamlit.app/
 
 ---
 
+## Overview
+
+DocuMind AI is an interactive document intelligence system that enables users to explore, compare, and understand document collections efficiently.
+
+Instead of treating NLP as isolated experiments, this project integrates multiple techniques into a single usable system.
+
+---
+
 ## What It Does
 
-DocuMind AI enables users to:
-
-- Upload and analyze **PDF or TXT documents**
+- Analyze **PDF and TXT documents**
 - Compare documents using **semantic similarity (SBERT)** or **lexical similarity (TF-IDF)**
-- Automatically group related documents using **K-Means clustering**
-- Discover underlying themes using **topic modeling (LDA)**
-- Generate concise summaries for faster understanding
-- Explore documents through an interactive analysis interface
+- Automatically group documents using **K-Means clustering**
+- Discover themes using **LDA topic modeling**
+- Generate **extractive summaries**
+- Visualize insights through an interactive interface
 
 ---
 
-## Why This Project
+## Example Output
 
-Working with large document collections is slow and difficult to scale manually.
+**Input**
+- 5 research papers on machine learning
 
-DocuMind AI was built to:
-- Reduce time spent reading and comparing documents
-- Provide structured insights from raw text
-- Bridge the gap between NLP models and usable tools
-
-This project focuses on turning machine learning pipelines into a **usable system**, not just isolated experiments.
+**Output**
+- 3 semantic clusters
+- Topic keywords per cluster
+- Similarity heatmap
+- Summaries for each document
 
 ---
 
-## System Architecture
+## Core Capabilities
+
+### Document Processing
+- Multi-file ingestion (PDF + TXT)
+- Text preprocessing pipeline
+
+### Representation
+- TF-IDF for interpretable keyword analysis
+- SBERT for semantic understanding
+
+### Analysis
+- K-Means clustering
+- Cosine similarity matrix
+- LDA topic modeling
+- Extractive summarization
+
+### Interface
+- Interactive Streamlit dashboard
+- Structured navigation across analysis layers
+
+---
+
+## Architecture
 
 ```
 User Interface (Streamlit)
@@ -65,28 +99,6 @@ TF-IDF Pipeline     SBERT Embeddings
 
 ---
 
-## Core Components
-
-### Document Processing
-- Multi-file ingestion (PDF + TXT)
-- Text preprocessing pipeline
-
-### Representation
-- TF-IDF vectorization for interpretability
-- SBERT embeddings for semantic understanding
-
-### Analysis
-- K-Means clustering
-- Cosine similarity matrix
-- LDA topic modeling
-- Extractive summarization
-
-### Interface
-- Interactive dashboard built with Streamlit
-- Structured navigation across analysis views
-
----
-
 ## TF-IDF vs SBERT
 
 | Aspect | TF-IDF | SBERT |
@@ -98,12 +110,31 @@ TF-IDF Pipeline     SBERT Embeddings
 
 ---
 
-## Example Use Cases
+## Tech Stack
+
+**Core**
+- Python
+- Streamlit
+
+**NLP / ML**
+- scikit-learn
+- Sentence Transformers (SBERT)
+- TF-IDF Vectorization
+- K-Means Clustering
+- LDA Topic Modeling
+
+**Visualization**
+- Plotly
+- Pandas
+
+---
+
+## Use Cases
 
 - Research paper clustering  
 - Literature review acceleration  
 - Technical document comparison  
-- Theme discovery across datasets  
+- Theme discovery  
 - Knowledge base exploration  
 
 ---
@@ -137,35 +168,31 @@ streamlit run app.py
 
 ---
 
-## Design Decisions
+## Design Philosophy
 
-**Streamlit**  
-Chosen for rapid prototyping and interactive UI development.
+This project focuses on:
 
-**Dual Representation (TF-IDF + SBERT)**  
-Balances interpretability with semantic depth.
-
-**K-Means Clustering**  
-Provides fast and intuitive grouping for exploratory analysis.
+- Turning NLP pipelines into **usable systems**
+- Balancing **interpretability and semantic depth**
+- Building tools that are both **technical and practical**
 
 ---
 
 ## Limitations
 
-- Summarization is extractive (not generative)
+- Summarization is extractive
 - Performance depends on dataset quality
-- LDA effectiveness decreases with small datasets
-- Architecture is not yet production-grade
+- LDA less effective on small datasets
 
 ---
 
 ## Roadmap
 
 - Persistent document sessions  
-- Exportable analysis reports  
-- Advanced summarization pipelines  
+- Exportable reports  
+- Advanced summarization  
 - Retrieval-based querying  
-- Migration to FastAPI + frontend architecture  
+- Migration to full-stack architecture  
 
 ---
 
@@ -174,10 +201,10 @@ Provides fast and intuitive grouping for exploratory analysis.
 **Kaavya Gala**  
 AI / Full Stack Developer  
 
-GitHub: https://github.com/KaavyaGala546
+GitHub: https://github.com/KaavyaGala546  
 
 ---
 
-## Notes
+## Final Note
 
-This project focuses on combining **machine learning + system design + usability** into a single cohesive application.
+This project is not just about NLP models — it is about building systems that make those models usable.
