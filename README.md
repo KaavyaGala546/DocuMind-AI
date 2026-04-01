@@ -1,8 +1,17 @@
 # DocuMind AI
 
-> Explore, cluster, and understand entire document collections in seconds using semantic analysis.
+> AI-powered research assistant for exploring, clustering, and understanding large document collections.
 
-**Built to bridge the gap between NLP models and real-world usable systems.**
+**Designed to bridge the gap between NLP models and real-world usable systems.**
+
+---
+
+## 🚀 Key Impact
+
+- Process and analyze **multi-document datasets efficiently**
+- Reduce manual document exploration time through **semantic similarity and clustering**
+- Enable **faster insight discovery** across research papers and technical documents
+- Integrates multiple NLP techniques into a **single interactive system**
 
 ---
 
@@ -26,64 +35,21 @@ https://docu-mind-ai-kaavya.streamlit.app/
 
 ---
 
-## Overview
+## 🧠 Overview
 
-Unlike typical document chat systems, this project focuses on visual analysis — clustering, similarity mapping, and thematic discovery.
+Unlike typical document chat systems, DocuMind AI focuses on **deep document understanding** — clustering, similarity mapping, and thematic discovery.
 
-DocuMind AI is an interactive document intelligence system that enables users to explore, compare, and understand document collections efficiently.
+It is an interactive **document intelligence system** that allows users to:
 
-Instead of treating NLP as isolated experiments, this project integrates multiple techniques into a single usable system.
+- Explore document collections
+- Identify relationships between documents
+- Extract themes and insights
 
----
-
-## What It Does
-
-- Analyze **PDF and TXT documents**
-- Compare documents using **semantic similarity (SBERT)** or **lexical similarity (TF-IDF)**
-- Automatically group documents using **K-Means clustering**
-- Discover themes using **LDA topic modeling**
-- Generate **extractive summaries**
-- Visualize insights through an interactive interface
+Instead of isolated NLP experiments, this project builds a **complete end-to-end system** combining multiple techniques into a usable workflow.
 
 ---
 
-## Example Output
-
-**Input**
-- 5 research papers on machine learning
-
-**Output**
-- 3 semantic clusters
-- Topic keywords per cluster
-- Similarity heatmap
-- Summaries for each document
-
----
-
-## Core Capabilities
-
-### Document Processing
-- Multi-file ingestion (PDF + TXT)
-- Text preprocessing pipeline
-
-### Representation
-- TF-IDF for interpretable keyword analysis
-- SBERT for semantic understanding
-
-### Analysis
-- K-Means clustering
-- Cosine similarity matrix
-- LDA topic modeling
-- Extractive summarization
-
-### Interface
-- Interactive Streamlit dashboard
-- Structured navigation across analysis layers
-
----
-
-## Architecture
-
+## ⚙️ System Architecture
 ```
 User Interface (Streamlit)
         │
@@ -109,7 +75,45 @@ TF-IDF Pipeline     SBERT Embeddings
 
 ---
 
-## TF-IDF vs SBERT
+## 🔍 Core Capabilities
+
+### 📄 Document Processing
+- Multi-file ingestion (PDF + TXT)
+- Robust text preprocessing pipeline
+
+### 🧠 Representation
+- TF-IDF for interpretable keyword analysis
+- SBERT for deep semantic understanding
+
+### 📊 Analysis
+- K-Means clustering for grouping documents
+- Cosine similarity matrix for comparison
+- LDA topic modeling for theme discovery
+- Extractive summarization for quick insights
+
+### 🖥 Interface
+- Interactive Streamlit dashboard
+- Smooth navigation across analysis layers
+
+---
+
+## 📌 Example Workflow
+
+**Input**
+- Collection of research papers (PDF/TXT)
+
+**System Processing**
+- Preprocessing → Embedding → Clustering → Topic Modeling
+
+**Output**
+- Semantic clusters of related documents  
+- Topic keywords per cluster  
+- Similarity heatmap  
+- Extractive summaries  
+
+---
+
+## ⚖️ TF-IDF vs SBERT
 
 | Aspect | TF-IDF | SBERT |
 |------|--------|------|
@@ -120,7 +124,7 @@ TF-IDF Pipeline     SBERT Embeddings
 
 ---
 
-## Tech Stack
+## 🛠 Tech Stack
 
 **Core**
 - Python
@@ -139,7 +143,7 @@ TF-IDF Pipeline     SBERT Embeddings
 
 ---
 
-## Use Cases
+## 🎯 Use Cases
 
 - Research paper clustering  
 - Literature review acceleration  
@@ -149,7 +153,7 @@ TF-IDF Pipeline     SBERT Embeddings
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 DocuMind-AI/
@@ -182,9 +186,9 @@ streamlit run app.py
 
 This project focuses on:
 
-- Turning NLP pipelines into **usable systems**
-- Balancing **interpretability and semantic depth**
-- Building tools that are both **technical and practical**
+- Build systems, not isolated models
+- Balance interpretability (TF-IDF) with semantic depth (SBERT)
+- Focus on real-world usability over theoretical complexity
 
 ---
 
@@ -200,8 +204,8 @@ This project focuses on:
 
 - Persistent document sessions  
 - Exportable reports  
-- Advanced summarization  
-- Retrieval-based querying  
+- Advanced summarization(abstractive) 
+- Retrieval-based querying(RAG integration)
 - Migration to full-stack architecture  
 
 ---
@@ -217,4 +221,5 @@ GitHub: https://github.com/KaavyaGala546
 
 ## Final Note
 
-This project is not just about NLP models — it is about building systems that make those models usable.
+This project is not just about NLP models —
+it is about building systems that make those models usable in real-world workflows.
