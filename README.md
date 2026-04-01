@@ -13,6 +13,9 @@
 - Enable **faster insight discovery** across research papers and technical documents
 - Integrates multiple NLP techniques into a **single interactive system**
 
+- Tested on multi-document datasets (research papers, technical docs)
+- Enables faster document exploration compared to manual reading workflows
+
 ---
 
 ## Preview
