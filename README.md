@@ -20,6 +20,8 @@
 
 ## Preview
 
+Interactive dashboard showing clustering, similarity heatmap, and topic insights
+
 <p align="center">
   <a href="assets/screenshots/preview.mp4">
     <img src="assets/screenshots/livepreview.png" alt="DocuMind Demo" width="800"/>
