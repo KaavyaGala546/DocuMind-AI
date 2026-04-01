@@ -191,7 +191,7 @@ streamlit run app.py
 
 This project focuses on:
 
-- Build systems, not isolated models
+- Build systems, not just isolated models
 - Balance interpretability (TF-IDF) with semantic depth (SBERT)
 - Focus on real-world usability over theoretical complexity
 
@@ -209,8 +209,8 @@ This project focuses on:
 
 - Persistent document sessions  
 - Exportable reports  
-- Advanced summarization(abstractive) 
-- Retrieval-based querying(RAG integration)
+- Advanced summarization (abstractive) 
+- Retrieval-based querying (RAG integration)
 - Migration to full-stack architecture  
 
 ---
